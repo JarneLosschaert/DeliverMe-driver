@@ -48,8 +48,8 @@ fun Notification(
             .border(1.dp, Color.Black, RoundedCornerShape(8.dp))
             .padding(10.dp),
     ) {
-        Content(text = "Your package has been sent.")
-        SmallButton(modifier = Modifier.padding(top = 10.dp), onClick = showPackageDetails)
+        Content(text = "You have been paid!")
+        //SmallButton(modifier = Modifier.padding(top = 10.dp), onClick = showPackageDetails)
         DateDetails(text = "12/12/2021")
     }
     Spacer(modifier = Modifier.height(10.dp))
