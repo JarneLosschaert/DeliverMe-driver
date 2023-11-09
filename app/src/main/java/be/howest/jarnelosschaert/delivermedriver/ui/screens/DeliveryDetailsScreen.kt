@@ -10,7 +10,7 @@ import be.howest.jarnelosschaert.delivermedriver.ui.helpers.components.SmallButt
 import be.howest.jarnelosschaert.delivermedriver.ui.helpers.components.Title
 
 @Composable
-fun PackageDetailsScreen(
+fun DeliveryDetailsScreen(
     modifier: Modifier = Modifier,
     onGoBack: () -> Unit
 ) {
@@ -18,23 +18,25 @@ fun PackageDetailsScreen(
         Column {
             Title(text = "Package details", onGoBack = onGoBack, withGoBack = true)
 
-            PackageDetail(label = "Sender", content = "Daan Hautekiet")
-            PackageDetail(label = "Address (sender)", content = "Kortrijksestraat 12, 8500 Kortrijk")
-            PackageDetail(label = "Receiver", content = "Glenn Callens")
-            PackageDetail(label = "Address (receiver)", content = "Kortrijksestraat 12, 8500 Kortrijk")
-            PackageDetail(label = "Date", content = "12/10/2022")
-            PackageDetail(label = "Departure", content = "13:20")
-            PackageDetail(label = "Expected arrival", content = "13:40")
-            PackageDetail(label = "Arrival", content = "13:41")
-            PackageDetail(label = "Description", content = "A small package")
+            DeliveryDetail(label = "Sender", content = "Daan Hautekiet")
+            DeliveryDetail(label = "Address (sender)", content = "Kortrijksestraat 12, 8500 Kortrijk")
+            DeliveryDetail(label = "Receiver", content = "Glenn Callens")
+            DeliveryDetail(label = "Address (receiver)", content = "Kortrijksestraat 12, 8500 Kortrijk")
+            DeliveryDetail(label = "Expected delivery time", content = "10 min")
+            DeliveryDetail(label = "Payment", content = "€ 10")
 
-            SmallButton(text = "See live location", onClick = {})
+            SmallButton(text = "Accept delivery",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                onClick = {}
+            )
         }
     }
 }
 
 @Composable
-fun PackageDetail(label: String, content: String) {
+fun DeliveryDetail(label: String, content: String) {
     Label(text = label)
     Content(text = content)
     Spacer(modifier = Modifier.height(10.dp))

@@ -20,7 +20,7 @@ import be.howest.jarnelosschaert.delivermedriver.logic.controllers.AuthControlle
 import be.howest.jarnelosschaert.delivermedriver.logic.controllers.DeliverMeController
 import be.howest.jarnelosschaert.delivermedriver.ui.helpers.components.roundedBottomNav
 import be.howest.jarnelosschaert.delivermedriver.ui.screens.NotificationsScreen
-import be.howest.jarnelosschaert.delivermedriver.ui.screens.PackageDetailsScreen
+import be.howest.jarnelosschaert.delivermedriver.ui.screens.DeliveryDetailsScreen
 import be.howest.jarnelosschaert.delivermedriver.ui.screens.SettingScreen
 import be.howest.jarnelosschaert.delivermedriver.ui.screens.settingScreens.ProfileScreen
 
@@ -97,7 +97,7 @@ private fun AuthScreenNavigationConfigurations(
             )
         }
         composable(OtherScreens.PackageDetails.route) {
-            PackageDetailsScreen(modifier = modifier,
+            DeliveryDetailsScreen(modifier = modifier,
                 onGoBack = { controller.goBack() }
             )
         }
