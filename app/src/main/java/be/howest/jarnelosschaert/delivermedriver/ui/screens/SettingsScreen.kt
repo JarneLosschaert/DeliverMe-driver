@@ -49,7 +49,7 @@ sealed class SettingsPopup(override val setting: String, override val icon: Imag
     object Info : SettingsPopup("Info", Icons.Default.Info, { onDismiss ->
         GeneralPopup(
             title = "Info",
-            content = "Package delivery app",
+            content = "Package delivery app for the driver",
             confirmButton = "Ok",
             onDismiss = { onDismiss() },
         )

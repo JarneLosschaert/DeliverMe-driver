@@ -92,7 +92,6 @@ private fun AuthScreenNavigationConfigurations(
         composable(OtherScreens.Profile.route) {
             ProfileScreen(modifier = modifier,
                 onGoBack = { controller.goBack() },
-                navigateAddress = {  },
                 logout = { authController.logout() },
                 deleteAccount = { authController.deleteAccount() }
             )
