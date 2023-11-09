@@ -20,7 +20,7 @@ class AuthController(
     }
 
     fun signUp(signUp: SignUp) : List<String> {
-        val errors = checkValuesSignUp(signUp.username, signUp.email, signUp.phone, signUp.password, signUp.confirmPassword)
+        val errors = checkValuesSignUp(signUp.username, signUp.email, signUp.phone, signUp.cardNumber, signUp.password, signUp.confirmPassword)
         if (errors.isEmpty()) {
             login()
         }
@@ -39,6 +39,7 @@ class AuthController(
         username: String,
         email: String,
         phone: String,
+        cardNumber: String,
         password: String,
         confirmPassword: String
     ): List<String> {
@@ -58,6 +59,12 @@ class AuthController(
             errors.add("Phone number is required.")
         } else if (!isValidPhoneNumber(phone)) {
             errors.add("Invalid phone number format.")
+        }
+
+        if (cardNumber.isBlank()) {
+            errors.add("Card number is required.")
+        } else if (cardNumber.length != 16) {
+            errors.add("Card number must be 16 characters long.")
         }
 
         if (password.isBlank()) {

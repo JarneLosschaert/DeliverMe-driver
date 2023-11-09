@@ -21,12 +21,13 @@ fun SignUpScreen(
     var username by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var phone by remember { mutableStateOf("") }
+    var cardNumber by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
 
     var errors by remember { mutableStateOf(listOf<String>()) }
     val signUpCheck = {
-        errors = signUp(SignUp(username, email, phone, password, confirmPassword))
+        errors = signUp(SignUp(username, email, phone, cardNumber, password, confirmPassword))
     }
 
     Box(
@@ -42,6 +43,7 @@ fun SignUpScreen(
                         TextFieldLabel(label = "Username", value = username, onValueChange = { username = it })
                         TextFieldLabel(label = "Email", value = email, onValueChange = { email = it }, isEmail = true)
                         TextFieldLabel(label = "Phone number", value = phone, onValueChange = { phone = it}, isNumber = true)
+                        TextFieldLabel(label = "Card number", value = cardNumber, onValueChange = { cardNumber = it})
                         TextFieldLabel(label = "Password", value = password, onValueChange = { password = it }, isPassword = true)
                         TextFieldLabel(label = "Confirm password", value = confirmPassword, onValueChange = { confirmPassword = it }, isPassword = true)
                         AuthErrors(errors = errors)
