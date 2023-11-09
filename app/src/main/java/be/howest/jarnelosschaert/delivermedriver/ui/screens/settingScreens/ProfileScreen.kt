@@ -34,7 +34,6 @@ data class PopupContent(
 fun ProfileScreen(
     modifier: Modifier = Modifier,
     onGoBack: () -> Unit,
-    navigateAddress: () -> Unit,
     logout: () -> Unit,
     deleteAccount: () -> Unit
 ) {
@@ -70,14 +69,11 @@ fun ProfileScreen(
                     ProfilePicture()
                     Profile(
                         onTextEdit = { textPopupContent = it; isTextPopupVisible = true },
-                        onChoiceEdit = { choicePopupContent = it; isChoicePopupVisible = true },
                         onDismiss = { isTextPopupVisible = false; isChoicePopupVisible = false },
-                        navigateAddress = navigateAddress,
                     )
                     ProfileButtons(
                         logout = logout,
                         deleteAccount = deleteAccount,
-                        navigateAddress = navigateAddress,
                         onEdit = { choicePopupContent = it; isChoicePopupVisible = true },
                         onDismiss = { isChoicePopupVisible = false }
                     )
@@ -94,13 +90,11 @@ fun ProfileButtons(
     deleteAccount: () -> Unit,
     onEdit: (PopupContent) -> Unit,
     onDismiss: () -> Unit,
-    navigateAddress: () -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
         Spacer(modifier = Modifier.height(10.dp))
-        SmallButton(text = "Add address", onClick = navigateAddress)
         SmallButton(text = "Change password", onClick = {})
         SmallButton(text = "Change profile picture", onClick = {})
         SmallButton(
@@ -143,9 +137,7 @@ fun ProfileButtons(
 @Composable
 fun Profile(
     onTextEdit: (PopupContent) -> Unit,
-    onChoiceEdit: (PopupContent) -> Unit,
     onDismiss: () -> Unit,
-    navigateAddress: () -> Unit
 ) {
     EditableContentLabel(label = "Username",
         text = "Daan Hautekiet",
@@ -177,25 +169,15 @@ fun Profile(
             onDismiss = { onDismiss() },
             onConfirm = {}
         ))
-    EditableContentLabel(label = "Home address",
-        text = "Kortrijksestraat 12, 8500 Kortrijk",
-        onEdit = onChoiceEdit,
+    EditableContentLabel(label = "Card number",
+        text = "BE12 3456 7890 1234",
+        onEdit = onTextEdit,
         popupContent = PopupContent(
-            title = "Change home address",
-            content = "Are you sure you want to change your home address?",
-            toastText = "Changing home address",
+            title = "Change card number",
+            label = "New card number",
+            toastText = "Card number changed",
             onDismiss = { onDismiss() },
-            onConfirm = { navigateAddress() }
-        ))
-    EditableContentLabel(label = "Extra address 1",
-        text = "Kortrijksestraat 12, 8500 Kortrijk",
-        onEdit = onChoiceEdit,
-        popupContent = PopupContent(
-            title = "Change work address",
-            content = "Are you sure you want to change your work address?",
-            toastText = "Changing work address",
-            onDismiss = { onDismiss() },
-            onConfirm = { navigateAddress() }
+            onConfirm = {}
         ))
 }
 
