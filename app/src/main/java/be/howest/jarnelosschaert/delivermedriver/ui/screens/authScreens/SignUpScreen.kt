@@ -9,7 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import be.howest.jarnelosschaert.delivermedriver.logic.models.SignUp
+import be.howest.jarnelosschaert.delivermedriver.logic.data.SignUp
 import be.howest.jarnelosschaert.delivermedriver.ui.helpers.components.*
 
 @Composable

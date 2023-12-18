@@ -1,7 +1,7 @@
 package be.howest.jarnelosschaert.delivermedriver.logic.controllers
 
 import androidx.navigation.NavController
-import be.howest.jarnelosschaert.delivermedriver.logic.models.SignUp
+import be.howest.jarnelosschaert.delivermedriver.logic.data.SignUp
 import be.howest.jarnelosschaert.delivermedriver.ui.AuthorizeScreens
 
 class AuthController(

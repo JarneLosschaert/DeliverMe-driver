@@ -1,4 +1,4 @@
-package be.howest.jarnelosschaert.delivermedriver.logic.models
+package be.howest.jarnelosschaert.delivermedriver.logic.data
 
 class SignUp(
     val username: String,
