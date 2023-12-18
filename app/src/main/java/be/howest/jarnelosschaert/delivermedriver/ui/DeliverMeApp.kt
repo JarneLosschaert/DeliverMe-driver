@@ -116,6 +116,7 @@ private fun AuthScreenNavigationConfigurations(
         composable(OtherScreens.DeliveryDetails.route) {
             DeliveryDetailsScreen(modifier = modifier,
                 delivery = controller.uiState.delivery,
+                onAssignTap = { controller.onAssignTap() },
                 onGoBack = { controller.goBack() }
             )
         }

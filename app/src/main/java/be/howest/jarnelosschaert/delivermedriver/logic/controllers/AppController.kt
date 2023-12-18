@@ -20,6 +20,7 @@ class AppController(
     init {
         loadDeliveries()
     }
+
     fun loadDeliveries(refreshing: Boolean = false) {
         if (refreshing) uiState.refreshing = true
         deliveriesService.getDeliveries(
@@ -42,10 +43,26 @@ class AppController(
             }
         )
     }
+
+    fun onAssignTap() {
+        deliveriesService.assignDelivery(
+            authController.uiState.jwt,
+            uiState.delivery.id,
+            handleSuccess = {
+                Toast.makeText(navController.context, "Delivery assigned", Toast.LENGTH_SHORT)
+                    .show()
+            },
+            handleFailure = { message ->
+                Toast.makeText(navController.context, message, Toast.LENGTH_SHORT).show()
+            }
+        )
+    }
+
     fun onDeliveryTap(delivery: Delivery) {
         uiState.delivery = delivery
         navController.navigate(OtherScreens.DeliveryDetails.route)
     }
+
     fun goBack() {
         if (navController.currentDestination?.route == BottomNavigationScreens.Home.route) {
             //uiState.showExitDialog = true

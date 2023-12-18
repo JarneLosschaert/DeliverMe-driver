@@ -27,4 +27,21 @@ class DeliveriesService: ViewModel() {
             }
         }
     }
+
+    fun assignDelivery(
+        jwt: String,
+        id: Int,
+        handleSuccess: (Delivery) -> Unit,
+        handleFailure: (String) -> Unit,
+    ) {
+        viewModelScope.launch {
+            try {
+                val response = apiService.assignDelivery("Bearer $jwt", id)
+                handleSuccess(response)
+            } catch (e: Exception) {
+                handleFailure("Failed to assign delivery")
+                println("Error assign delivery: ${e.message}")
+            }
+        }
+    }
 }

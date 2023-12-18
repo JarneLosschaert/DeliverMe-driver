@@ -12,6 +12,7 @@ import be.howest.jarnelosschaert.delivermedriver.ui.helpers.functions.showAddres
 fun DeliveryDetailsScreen(
     modifier: Modifier = Modifier,
     delivery: Delivery,
+    onAssignTap: () -> Unit,
     onGoBack: () -> Unit
 ) {
     Box(modifier = modifier.fillMaxWidth()) {
@@ -29,7 +30,7 @@ fun DeliveryDetailsScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
-                onClick = {}
+                onClick = onAssignTap
             )
         }
     }
