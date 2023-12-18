@@ -4,10 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import be.howest.jarnelosschaert.delivermedriver.ui.helpers.components.Content
-import be.howest.jarnelosschaert.delivermedriver.ui.helpers.components.Label
-import be.howest.jarnelosschaert.delivermedriver.ui.helpers.components.SmallButton
-import be.howest.jarnelosschaert.delivermedriver.ui.helpers.components.Title
+import be.howest.jarnelosschaert.delivermedriver.ui.helpers.components.*
 
 @Composable
 fun DeliveryDetailsScreen(
@@ -25,7 +22,7 @@ fun DeliveryDetailsScreen(
             DeliveryDetail(label = "Expected delivery time", content = "10 min")
             DeliveryDetail(label = "Payment", content = "€ 10")
 
-            SmallButton(text = "Accept delivery",
+            GeneralButton(text = "Accept delivery",
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),

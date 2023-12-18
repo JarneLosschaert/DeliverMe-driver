@@ -25,11 +25,7 @@ fun Authorize() {
     val navController = rememberNavController()
     val controller = AuthController(navController = navController)
 
-    if (controller.isLoggedIn()) {
-        navController.navigate(AuthorizeScreens.App.route)
-    } else {
-        AuthorizeNavigation(controller = controller, navController = navController)
-    }
+    AuthorizeNavigation(controller = controller, navController = navController)
 }
 
 @Composable
@@ -49,15 +45,17 @@ private fun AuthScreenNavigationConfigurations(
         composable(AuthorizeScreens.Login.route) {
             LoginScreen(
                 modifier = modifier,
+                errors = controller.uiState.loginErrors,
                 navigateToSignUp = { navController.navigate(AuthorizeScreens.SignUp.route) },
-                login = { controller.login() }
+                login = { email, password -> controller.login(email, password) }
             )
         }
         composable(AuthorizeScreens.SignUp.route) {
             SignUpScreen(
                 modifier = modifier,
+                errors = controller.uiState.signUpErrors,
                 navigateToLogin = { navController.navigate(AuthorizeScreens.Login.route) },
-                signUp = { controller.signUp(it) }
+                signUp = { controller.signUp(it) },
             )
         }
         composable(AuthorizeScreens.App.route) {

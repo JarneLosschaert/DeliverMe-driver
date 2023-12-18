@@ -15,20 +15,16 @@ import be.howest.jarnelosschaert.delivermedriver.ui.helpers.components.*
 @Composable
 fun SignUpScreen(
     modifier: Modifier = Modifier,
+    errors: List<String>,
     navigateToLogin: () -> Unit,
-    signUp: (SignUp) -> List<String>
+    signUp: (SignUp) -> Unit
 ) {
     var username by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var phone by remember { mutableStateOf("") }
-    var cardNumber by remember { mutableStateOf("") }
+    var walletAddress by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
-
-    var errors by remember { mutableStateOf(listOf<String>()) }
-    val signUpCheck = {
-        errors = signUp(SignUp(username, email, phone, cardNumber, password, confirmPassword))
-    }
 
     Box(
         modifier = modifier.fillMaxWidth(),
@@ -43,13 +39,13 @@ fun SignUpScreen(
                         TextFieldLabel(label = "Username", value = username, onValueChange = { username = it })
                         TextFieldLabel(label = "Email", value = email, onValueChange = { email = it }, isEmail = true)
                         TextFieldLabel(label = "Phone number", value = phone, onValueChange = { phone = it}, isNumber = true)
-                        TextFieldLabel(label = "Card number", value = cardNumber, onValueChange = { cardNumber = it})
+                        TextFieldLabel(label = "Card number", value = walletAddress, onValueChange = { walletAddress = it})
                         TextFieldLabel(label = "Password", value = password, onValueChange = { password = it }, isPassword = true)
                         TextFieldLabel(label = "Confirm password", value = confirmPassword, onValueChange = { confirmPassword = it }, isPassword = true)
-                        AuthErrors(errors = errors)
-                        SmallButton(
+                        Errors(errors = errors)
+                        GeneralButton(
                             text = "Sign up",
-                            onClick = signUpCheck,
+                            onClick = { signUp(SignUp(username, email, phone, walletAddress, password, confirmPassword)) },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(16.dp)

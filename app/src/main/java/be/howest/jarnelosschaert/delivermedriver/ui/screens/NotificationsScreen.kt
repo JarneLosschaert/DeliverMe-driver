@@ -10,7 +10,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import be.howest.jarnelosschaert.delivermedriver.ui.helpers.components.Content
 import be.howest.jarnelosschaert.delivermedriver.ui.helpers.components.DateDetails
-import be.howest.jarnelosschaert.delivermedriver.ui.helpers.components.SmallButton
 import be.howest.jarnelosschaert.delivermedriver.ui.helpers.components.Title
 
 @Composable

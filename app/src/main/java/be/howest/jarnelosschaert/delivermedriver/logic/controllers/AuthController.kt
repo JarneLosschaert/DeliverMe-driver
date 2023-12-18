@@ -80,7 +80,7 @@ class AuthController(
         Toast.makeText(navController.context, "Logged out", Toast.LENGTH_SHORT).show()
     }
 
-    fun checkSignUp(signUp: SignUp) {
+    fun signUp(signUp: SignUp) {
         clearErrors()
         uiState.signUpErrors = checkValuesSignUp(
             signUp.username,

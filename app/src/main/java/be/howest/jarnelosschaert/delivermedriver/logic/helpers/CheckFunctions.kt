@@ -56,65 +56,6 @@ private fun isValidPhoneNumber(phone: String): Boolean {
 }
 
 private fun isValidWalletAddress(walletAddress: String): Boolean {
-    val walletAddressRegex = "^(0x)?[\\da-fA-F]{40}\$"
+    val walletAddressRegex = "^BE\\d{14}\$|BE\\d{2} \\d{4} \\d{4} \\d{4}\$"
     return walletAddress.matches(walletAddressRegex.toRegex())
-}
-
-fun checkAddress(Address: Address): List<String> {
-    val errors = mutableListOf<String>()
-
-    if (Address.street.isBlank()) {
-        errors.add("Street is required.")
-    } else if (!isValidStreet(Address.street)) {
-        errors.add("Invalid street format.")
-    }
-
-    if (Address.number.isBlank()) {
-        errors.add("Number is required.")
-    } else if (!isValidNumber(Address.number)) {
-        errors.add("Invalid number format.")
-    }
-
-    if (Address.zip.isBlank()) {
-        errors.add("Zip code is required.")
-    } else if (!isValidPostalCode(Address.zip)) {
-        errors.add("Invalid zip code format.")
-    }
-
-    if (Address.city.isBlank()) {
-        errors.add("City is required.")
-    } else if (!isValidCity(Address.city)) {
-        errors.add("Invalid city format.")
-    }
-
-    return errors
-}
-
-private fun isValidPostalCode(zip: String): Boolean {
-    val zipRegex = "^[1-9]\\d{3}$"
-    return zip.matches(zipRegex.toRegex())
-}
-
-private fun isValidStreet(street: String): Boolean {
-    
-    val streetRegex = "^[A-Za-z]+(?:[\\s-][A-Za-z]+)*\$"
-    return street.matches(streetRegex.toRegex())
-}
-
-private fun isValidNumber(number: String): Boolean {
-    val numberRegex = "^\\d+[a-zA-Z]*\$"
-    return number.matches(numberRegex.toRegex())
-}
-
-private fun isValidCity(city: String): Boolean {
-    val cityRegex = "^[A-Za-z]+(?:[\\s-][A-Za-z]+)*\$"
-    return city.matches(cityRegex.toRegex())
-}
-
-fun checkPackage(description: String): List<String> {
-    val errors = mutableListOf<String>()
-    if (description.isBlank()) {
-        errors.add("Description is required.")
-    }
-    return errors
 }

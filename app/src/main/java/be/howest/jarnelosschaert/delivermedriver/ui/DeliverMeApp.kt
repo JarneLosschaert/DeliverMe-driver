@@ -38,8 +38,6 @@ sealed class OtherScreens(val route: String) {
 
 @Composable
 fun DeliverMeApp(authController: AuthController) {
-    //HandleNotifications()
-
     val navController = rememberNavController()
     val bottomNavigationItems = listOf(
         BottomNavigationScreens.Home,
@@ -96,7 +94,7 @@ private fun AuthScreenNavigationConfigurations(
             ProfileScreen(modifier = modifier,
                 onGoBack = { controller.goBack() },
                 logout = { authController.logout() },
-                deleteAccount = { authController.deleteAccount() }
+                deleteAccount = { authController.deleteDriver() }
             )
         }
         composable(OtherScreens.DeliveryDetails.route) {

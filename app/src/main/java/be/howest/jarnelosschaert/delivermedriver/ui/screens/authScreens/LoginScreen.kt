@@ -13,8 +13,9 @@ import be.howest.jarnelosschaert.delivermedriver.ui.helpers.components.*
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
+    errors: List<String>,
     navigateToSignUp: () -> Unit,
-    login: () -> Unit
+    login: (String, String) -> Unit
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -39,9 +40,10 @@ fun LoginScreen(
                         onValueChange = { password = it },
                         isPassword = true
                     )
-                    SmallButton(
+                    Errors(errors = errors)
+                    GeneralButton(
                         text = "Log in",
-                        onClick = login,
+                        onClick = { login(email, password) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(16.dp)

@@ -24,7 +24,8 @@ import androidx.compose.ui.text.style.TextOverflow
 @Composable
 fun Title(text: String = "DeliverMe", onGoBack: () -> Unit = {}, withGoBack: Boolean = false) {
     Box(
-        modifier = Modifier.fillMaxWidth()) {
+        modifier = Modifier.fillMaxWidth()
+    ) {
         if (withGoBack) {
             Box(
                 modifier = Modifier
@@ -101,9 +102,15 @@ fun DateDetails(text: String) {
         fontStyle = FontStyle.Italic
     )
 }
+@Composable
+fun ContentLabel(label: String, content: String) {
+    Label(text = label)
+    Content(text = content)
+    Spacer(modifier = Modifier.height(10.dp))
+}
 
 @Composable
-fun SmallButton(
+fun GeneralButton(
     modifier: Modifier = Modifier,
     text: String = "See details",
     onClick: () -> Unit,
@@ -129,15 +136,34 @@ fun roundedBottomNav() = RoundedCornerShape(
 )
 
 @Composable
-fun TextFieldLabel(label: String, value: String, onValueChange: (String) -> Unit, isPassword: Boolean = false, isEmail: Boolean = false, isNumber : Boolean = false) {
+fun TextFieldLabel(
+    label: String,
+    value: String,
+    onValueChange: (String) -> Unit,
+    isPassword: Boolean = false,
+    isEmail: Boolean = false,
+    isNumber: Boolean = false
+) {
     Label(text = label)
-    GeneralTextField(text = value, onValueChange = onValueChange, isPassword = isPassword, isEmail = isEmail, isPhone = isNumber)
+    GeneralTextField(
+        text = value,
+        onValueChange = onValueChange,
+        isPassword = isPassword,
+        isEmail = isEmail,
+        isPhone = isNumber
+    )
     Spacer(modifier = Modifier.padding(top = 10.dp))
 }
 
 @Composable
-fun GeneralTextField(text: String, onValueChange: (String) -> Unit, isPassword: Boolean = false, isEmail: Boolean = false, isPhone : Boolean = false, placeholder: String = "") {
-
+fun GeneralTextField(
+    text: String,
+    onValueChange: (String) -> Unit,
+    isPassword: Boolean = false,
+    isEmail: Boolean = false,
+    isPhone: Boolean = false,
+    placeholder: String = ""
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -169,7 +195,7 @@ fun GeneralTextField(text: String, onValueChange: (String) -> Unit, isPassword: 
 }
 
 @Composable
-fun AuthErrors(errors: List<String>) {
+fun Errors(errors: List<String>) {
     errors.forEach {
         Content(text = it, isError = true)
     }
@@ -182,11 +208,12 @@ fun AuthBottomNavigate(
     navigate: () -> Unit
 ) {
     Spacer(modifier = Modifier.height(20.dp))
-    Row(modifier = Modifier.fillMaxWidth(),
+    Row(
+        modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Label(text = label)
-        SmallButton(text = text, onClick = navigate, modifier = Modifier.padding(start = 30.dp))
+        GeneralButton(text = text, onClick = navigate, modifier = Modifier.padding(start = 30.dp))
     }
 }
