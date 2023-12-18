@@ -15,36 +15,41 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import be.howest.jarnelosschaert.delivermedriver.R
+import be.howest.jarnelosschaert.delivermedriver.logic.models.Delivery
 import be.howest.jarnelosschaert.delivermedriver.ui.helpers.components.Title
+import be.howest.jarnelosschaert.delivermedriver.ui.helpers.functions.showAddress
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
+    deliveries: List<Delivery>,
     sort: String,
+    refreshing: Boolean,
     showDetails: () -> Unit,
-    onSortChange: (String) -> Unit
+    onSortChange: (String) -> Unit,
+    onRefreshDeliveries: () -> Unit,
 ) {
     Box(modifier = modifier.fillMaxWidth()) {
         Column {
             Title()
             SortOptions(sort = sort, onSortChange = onSortChange)
-            LazyColumn(content = {
-                item {
-                    DeliveryCard(showDetails = showDetails)
-                    DeliveryCard(showDetails = showDetails)
-                    DeliveryCard(showDetails = showDetails)
-                    DeliveryCard(showDetails = showDetails)
-                    DeliveryCard(showDetails = showDetails)
-                    DeliveryCard(showDetails = showDetails)
-                    DeliveryCard(showDetails = showDetails)
-                    DeliveryCard(showDetails = showDetails)
-                    DeliveryCard(showDetails = showDetails)
-                    DeliveryCard(showDetails = showDetails)
-                    DeliveryCard(showDetails = showDetails)
-                    DeliveryCard(showDetails = showDetails)
-                    DeliveryCard(showDetails = showDetails)
-                }
-            })
+            SwipeRefresh(
+                state = rememberSwipeRefreshState(isRefreshing = refreshing),
+                onRefresh = onRefreshDeliveries,
+            ) {
+                LazyColumn(content = {
+                    item {
+                        for (delivery in deliveries) {
+                            DeliveryCard(
+                                delivery = delivery,
+                                showDetails = showDetails
+                            )
+                        }
+                    }
+                })
+            }
         }
     }
 }
@@ -117,6 +122,7 @@ fun SortOption(
 
 @Composable
 fun DeliveryCard(
+    delivery: Delivery,
     showDetails: () -> Unit
 ) {
     Column(
@@ -125,14 +131,14 @@ fun DeliveryCard(
             .padding(10.dp)
             .clickable(onClick = showDetails),
     ) {
-        DeliveryDetail(label = "From", content = "Hogeweg 1, 8500 Kortrijk")
-        DeliveryDetail(label = "To", content = "Kortrijksestraat 12, 8500 Kortrijk")
+        DeliveryDetail(label = "From", content = showAddress(delivery.packageInfo.senderAddress))
+        DeliveryDetail(label = "To", content = showAddress(delivery.packageInfo.receiverAddress))
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             DeliveryDetail(label = "Time", content = "10 min", withSpacer = false)
-            DeliveryDetail(label = "Payment", content = "€ 10", withSpacer = false)
+            DeliveryDetail(label = "Payment", content = "€ ${delivery.packageInfo.fee}", withSpacer = false)
         }
     }
     Spacer(modifier = Modifier.height(10.dp))

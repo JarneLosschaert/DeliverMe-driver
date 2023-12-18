@@ -16,12 +16,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import be.howest.jarnelosschaert.delivermedriver.logic.controllers.AuthController
 import be.howest.jarnelosschaert.delivermedriver.logic.controllers.AppController
+import be.howest.jarnelosschaert.delivermedriver.logic.controllers.AuthController
 import be.howest.jarnelosschaert.delivermedriver.ui.helpers.components.roundedBottomNav
-import be.howest.jarnelosschaert.delivermedriver.ui.screens.NotificationsScreen
 import be.howest.jarnelosschaert.delivermedriver.ui.screens.DeliveryDetailsScreen
 import be.howest.jarnelosschaert.delivermedriver.ui.screens.HomeScreen
+import be.howest.jarnelosschaert.delivermedriver.ui.screens.NotificationsScreen
 import be.howest.jarnelosschaert.delivermedriver.ui.screens.SettingScreen
 import be.howest.jarnelosschaert.delivermedriver.ui.screens.settingScreens.ProfileScreen
 
@@ -71,11 +71,19 @@ private fun AuthScreenNavigationConfigurations(
     authController: AuthController,
     onNavigation: (String) -> Unit
 ) {
-    val controller = AppController(navController)
+    val controller = AppController(navController, authController)
 
     NavHost(navController, startDestination = BottomNavigationScreens.Home.route) {
         composable(BottomNavigationScreens.Home.route) {
-            HomeScreen(modifier = modifier, sort = controller.uiState.sort, showDetails = { controller.navigateTo(OtherScreens.DeliveryDetails.route) }, onSortChange = { controller.onSortChange(it) })
+            HomeScreen(
+                modifier = modifier,
+                deliveries = controller.uiState.deliveries,
+                sort = controller.uiState.sort,
+                refreshing = controller.uiState.refreshing,
+                showDetails = { controller.navigateTo(OtherScreens.DeliveryDetails.route) },
+                onSortChange = { controller.onSortChange(it) },
+                onRefreshDeliveries = { controller.loadDeliveries(refreshing = true) },
+            )
             onNavigation(BottomNavigationScreens.Home.route)
         }
         composable(BottomNavigationScreens.Notifications.route) {
@@ -85,7 +93,8 @@ private fun AuthScreenNavigationConfigurations(
             onNavigation(BottomNavigationScreens.Notifications.route)
         }
         composable(BottomNavigationScreens.Settings.route) {
-            SettingScreen(modifier = modifier,
+            SettingScreen(
+                modifier = modifier,
                 navigateTo = { controller.navigateTo(it) },
             )
             onNavigation(BottomNavigationScreens.Settings.route)
@@ -131,7 +140,14 @@ fun DeliverMeBottomNavigation(
                 color = MaterialTheme.colors.primary
             }
             BottomNavigationItem(
-                icon = { Icon(screen.icon, contentDescription = null, tint = color, modifier = Modifier.size(36.dp)) },
+                icon = {
+                    Icon(
+                        screen.icon,
+                        contentDescription = null,
+                        tint = color,
+                        modifier = Modifier.size(36.dp)
+                    )
+                },
                 selected = currentRoute == screen.route,
                 onClick = {
                     if (currentRoute != screen.route) {
