@@ -3,9 +3,11 @@ package be.howest.jarnelosschaert.delivermedriver.logic.controllers
 import android.widget.Toast
 import androidx.navigation.NavController
 import be.howest.jarnelosschaert.delivermedriver.logic.AppUiState
+import be.howest.jarnelosschaert.delivermedriver.logic.models.Delivery
 import be.howest.jarnelosschaert.delivermedriver.logic.services.AuthService
 import be.howest.jarnelosschaert.delivermedriver.logic.services.DeliveriesService
 import be.howest.jarnelosschaert.delivermedriver.ui.BottomNavigationScreens
+import be.howest.jarnelosschaert.delivermedriver.ui.OtherScreens
 
 class AppController(
     private val navController: NavController,
@@ -40,7 +42,10 @@ class AppController(
             }
         )
     }
-
+    fun onDeliveryTap(delivery: Delivery) {
+        uiState.delivery = delivery
+        navController.navigate(OtherScreens.DeliveryDetails.route)
+    }
     fun goBack() {
         if (navController.currentDestination?.route == BottomNavigationScreens.Home.route) {
             //uiState.showExitDialog = true

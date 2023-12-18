@@ -27,7 +27,7 @@ fun HomeScreen(
     deliveries: List<Delivery>,
     sort: String,
     refreshing: Boolean,
-    showDetails: () -> Unit,
+    onDeliveryTap: (Delivery) -> Unit,
     onSortChange: (String) -> Unit,
     onRefreshDeliveries: () -> Unit,
 ) {
@@ -44,7 +44,7 @@ fun HomeScreen(
                         for (delivery in deliveries) {
                             DeliveryCard(
                                 delivery = delivery,
-                                showDetails = showDetails
+                                onDeliveryTap = { onDeliveryTap(delivery) }
                             )
                         }
                     }
@@ -123,13 +123,13 @@ fun SortOption(
 @Composable
 fun DeliveryCard(
     delivery: Delivery,
-    showDetails: () -> Unit
+    onDeliveryTap: () -> Unit
 ) {
     Column(
         modifier = Modifier
             .border(1.dp, Color.Black, RoundedCornerShape(8.dp))
             .padding(10.dp)
-            .clickable(onClick = showDetails),
+            .clickable(onClick = onDeliveryTap),
     ) {
         DeliveryDetail(label = "From", content = showAddress(delivery.packageInfo.senderAddress))
         DeliveryDetail(label = "To", content = showAddress(delivery.packageInfo.receiverAddress))

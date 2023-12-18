@@ -80,7 +80,7 @@ private fun AuthScreenNavigationConfigurations(
                 deliveries = controller.uiState.deliveries,
                 sort = controller.uiState.sort,
                 refreshing = controller.uiState.refreshing,
-                showDetails = { controller.navigateTo(OtherScreens.DeliveryDetails.route) },
+                onDeliveryTap = { controller.onDeliveryTap(it) },
                 onSortChange = { controller.onSortChange(it) },
                 onRefreshDeliveries = { controller.loadDeliveries(refreshing = true) },
             )
@@ -115,6 +115,7 @@ private fun AuthScreenNavigationConfigurations(
         }
         composable(OtherScreens.DeliveryDetails.route) {
             DeliveryDetailsScreen(modifier = modifier,
+                delivery = controller.uiState.delivery,
                 onGoBack = { controller.goBack() }
             )
         }
