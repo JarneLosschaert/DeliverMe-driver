@@ -21,6 +21,7 @@ import be.howest.jarnelosschaert.delivermedriver.logic.controllers.DeliverMeCont
 import be.howest.jarnelosschaert.delivermedriver.ui.helpers.components.roundedBottomNav
 import be.howest.jarnelosschaert.delivermedriver.ui.screens.NotificationsScreen
 import be.howest.jarnelosschaert.delivermedriver.ui.screens.DeliveryDetailsScreen
+import be.howest.jarnelosschaert.delivermedriver.ui.screens.HomeScreen
 import be.howest.jarnelosschaert.delivermedriver.ui.screens.SettingScreen
 import be.howest.jarnelosschaert.delivermedriver.ui.screens.settingScreens.ProfileScreen
 
@@ -32,7 +33,7 @@ sealed class BottomNavigationScreens(val route: String, val icon: ImageVector) {
 
 sealed class OtherScreens(val route: String) {
     object Profile : OtherScreens("profile")
-    object PackageDetails : OtherScreens("packageDetails")
+    object DeliveryDetails : OtherScreens("deliveryDetails")
 }
 
 @Composable
@@ -54,7 +55,9 @@ fun DeliverMeApp(authController: AuthController) {
         },
         content = { innerPadding ->
             AuthScreenNavigationConfigurations(
-                modifier = Modifier.padding(innerPadding).padding(start = 15.dp, end = 8.dp),
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .padding(start = 15.dp, end = 8.dp),
                 navController = navController,
                 authController = authController,
                 onNavigation = { pageClicked = it }
@@ -74,12 +77,12 @@ private fun AuthScreenNavigationConfigurations(
 
     NavHost(navController, startDestination = BottomNavigationScreens.Home.route) {
         composable(BottomNavigationScreens.Home.route) {
-            // home screen
+            HomeScreen(modifier = modifier, sort = controller.uiState.sort, showDetails = { controller.navigateTo(OtherScreens.DeliveryDetails.route) }, onSortChange = { controller.onSortChange(it) })
             onNavigation(BottomNavigationScreens.Home.route)
         }
         composable(BottomNavigationScreens.Notifications.route) {
             NotificationsScreen(modifier = modifier,
-                showPackageDetails = { controller.navigateTo(OtherScreens.PackageDetails.route) }
+                showPackageDetails = { controller.navigateTo(OtherScreens.DeliveryDetails.route) }
             )
             onNavigation(BottomNavigationScreens.Notifications.route)
         }
@@ -96,7 +99,7 @@ private fun AuthScreenNavigationConfigurations(
                 deleteAccount = { authController.deleteAccount() }
             )
         }
-        composable(OtherScreens.PackageDetails.route) {
+        composable(OtherScreens.DeliveryDetails.route) {
             DeliveryDetailsScreen(modifier = modifier,
                 onGoBack = { controller.goBack() }
             )

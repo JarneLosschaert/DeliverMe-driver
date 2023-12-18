@@ -5,7 +5,7 @@ import be.howest.jarnelosschaert.delivermedriver.logic.UiState
 import be.howest.jarnelosschaert.delivermedriver.ui.BottomNavigationScreens
 
 class DeliverMeController(private val navController: NavController) {
-    private val uiState: UiState = UiState()
+    val uiState: UiState = UiState()
 
     fun goBack() {
         if (navController.currentDestination?.route == BottomNavigationScreens.Home.route) {
@@ -17,5 +17,9 @@ class DeliverMeController(private val navController: NavController) {
 
     fun navigateTo(route: String) {
         navController.navigate(route)
+    }
+
+    fun onSortChange(sort: String) {
+        uiState.sort = sort
     }
 }
