@@ -1,17 +1,16 @@
-package be.howest.jarnelosschaert.delivermedriver.ui.helpers.components
+package be.howest.jarnelosschaert.deliverme.ui.helpers.components
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.AlertDialog
-import androidx.compose.material.Button
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
+import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -46,12 +45,9 @@ fun GeneralChoicePopup(
     title: String,
     content: String,
     confirmButton: String,
-    toastText: String,
     onDismiss: () -> Unit,
-    onConfirm: () -> Unit = {}
+    onConfirm: (String) -> Unit = {}
 ) {
-    val context = LocalContext.current
-
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text(text = title) },
@@ -61,9 +57,8 @@ fun GeneralChoicePopup(
         confirmButton = {
             Button(
                 onClick = {
-                    onConfirm()
+                    onConfirm(content)
                     onDismiss()
-                    Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show()
                 }
             ) {
                 Text(text = confirmButton)
@@ -86,11 +81,9 @@ fun GeneralTextPopup(
     title: String,
     label: String,
     confirmButton: String,
-    toastText: String,
     onDismiss: () -> Unit,
-    onConfirm: () -> Unit = {}
+    onConfirm: (String) -> Unit = {}
 ) {
-    val context = LocalContext.current
     var text by remember { mutableStateOf("") }
 
     AlertDialog(
@@ -109,9 +102,8 @@ fun GeneralTextPopup(
         confirmButton = {
             Button(
                 onClick = {
-                    onConfirm()
+                    onConfirm(text)
                     onDismiss()
-                    Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show()
                 }
             ) {
                 Text(text = confirmButton)
@@ -126,4 +118,31 @@ fun GeneralTextPopup(
             }
         },
     )
+}
+
+@Composable
+fun Loader(modifier: Modifier = Modifier, Text: String, withCancel : Boolean = false, onCancel: () -> Unit = {}) {
+    Column(
+        modifier = modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        CircularProgressIndicator()
+        Text(
+            text = Text,
+            modifier = Modifier.padding(top = 20.dp),
+            color = MaterialTheme.colors.primary,
+            style = MaterialTheme.typography.h6
+        )
+        if (withCancel) {
+            TextButton(
+                onClick = onCancel,
+                modifier = Modifier.padding(top = 10.dp),
+            ) {
+                Text(
+                    text = "Cancel",
+                    color = MaterialTheme.colors.onBackground,
+                    textDecoration = TextDecoration.Underline
+                )
+            }
+        }
+    }
 }

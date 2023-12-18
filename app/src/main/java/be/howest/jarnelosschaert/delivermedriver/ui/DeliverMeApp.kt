@@ -91,10 +91,17 @@ private fun AuthScreenNavigationConfigurations(
             onNavigation(BottomNavigationScreens.Settings.route)
         }
         composable(OtherScreens.Profile.route) {
-            ProfileScreen(modifier = modifier,
+            ProfileScreen(
+                modifier = modifier,
+                driver = authController.uiState.driver,
                 onGoBack = { controller.goBack() },
                 logout = { authController.logout() },
-                deleteAccount = { authController.deleteDriver() }
+                deleteAccount = { authController.deleteDriver() },
+                changeUserName = { authController.updateDriver(name = it) },
+                changeEmail = { authController.updateDriver(email = it) },
+                changePhone = { authController.updateDriver(phone = it) },
+                changeWalletAddress = { authController.updateDriver(walletAddress = it) },
+                changePassword = { authController.changePassword(it) },
             )
         }
         composable(OtherScreens.DeliveryDetails.route) {

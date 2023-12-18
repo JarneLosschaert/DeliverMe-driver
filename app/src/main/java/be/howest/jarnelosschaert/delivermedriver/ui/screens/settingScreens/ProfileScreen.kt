@@ -13,45 +13,53 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import be.howest.jarnelosschaert.deliverme.ui.helpers.components.GeneralChoicePopup
+import be.howest.jarnelosschaert.deliverme.ui.helpers.components.GeneralTextPopup
+import be.howest.jarnelosschaert.delivermedriver.logic.models.Driver
 import be.howest.jarnelosschaert.delivermedriver.ui.helpers.components.*
+import be.howest.jarnelosschaert.delivermedriver.ui.helpers.functions.showPhoneNumber
+import be.howest.jarnelosschaert.delivermedriver.ui.helpers.functions.showWalletAddress
 
 data class PopupContent(
     val title: String,
     val label: String = "",
     val content: String = "",
     val confirmButton: String = "Change",
-    val toastText: String,
     val onDismiss: () -> Unit,
-    val onConfirm: () -> Unit
+    val onConfirm: (String) -> Unit
 )
 
 @Composable
 fun ProfileScreen(
     modifier: Modifier = Modifier,
+    driver: Driver,
     onGoBack: () -> Unit,
     logout: () -> Unit,
-    deleteAccount: () -> Unit
+    deleteAccount: () -> Unit,
+    changeUserName: (String) -> Unit,
+    changeEmail: (String) -> Unit,
+    changePhone: (String) -> Unit,
+    changeWalletAddress: (String) -> Unit,
+    changePassword: (String) -> Unit
 ) {
     var isTextPopupVisible by remember { mutableStateOf(false) }
-    var textPopupContent by remember { mutableStateOf(PopupContent("", "", "", "", "", {}, {})) }
+    var textPopupContent by remember { mutableStateOf(PopupContent("", "", "", "", {}, {})) }
     if (isTextPopupVisible) {
         GeneralTextPopup(
             title = textPopupContent.title,
             label = textPopupContent.label,
             confirmButton = textPopupContent.confirmButton,
-            toastText = textPopupContent.toastText,
             onDismiss = textPopupContent.onDismiss,
-            onConfirm = { isTextPopupVisible = false }
+            onConfirm = textPopupContent.onConfirm
         )
     }
     var isChoicePopupVisible by remember { mutableStateOf(false) }
-    var choicePopupContent by remember { mutableStateOf(PopupContent("", "", "", "", "", {}, {})) }
+    var choicePopupContent by remember { mutableStateOf(PopupContent("", "", "", "", {}, {})) }
     if (isChoicePopupVisible) {
         GeneralChoicePopup(
             title = choicePopupContent.title,
             content = choicePopupContent.content,
             confirmButton = choicePopupContent.confirmButton,
-            toastText = choicePopupContent.toastText,
             onDismiss = choicePopupContent.onDismiss,
             onConfirm = choicePopupContent.onConfirm
         )
@@ -63,34 +71,52 @@ fun ProfileScreen(
                 item {
                     ProfilePicture()
                     Profile(
+                        driver = driver,
                         onTextEdit = { textPopupContent = it; isTextPopupVisible = true },
+                        onChoiceEdit = { choicePopupContent = it; isChoicePopupVisible = true },
                         onDismiss = { isTextPopupVisible = false; isChoicePopupVisible = false },
+                        changeUserName = changeUserName,
+                        changeEmail = changeEmail,
+                        changePhone = changePhone,
+                        changeWalletAddress = changeWalletAddress
                     )
-                    ProfileButtons(
+                    AuthButtons(
                         logout = logout,
                         deleteAccount = deleteAccount,
+                        changePassword = changePassword,
                         onEdit = { choicePopupContent = it; isChoicePopupVisible = true },
-                        onDismiss = { isChoicePopupVisible = false }
+                        onEditPassword = { textPopupContent = it; isTextPopupVisible = true },
+                        onDismiss = { isChoicePopupVisible = false; isTextPopupVisible = false }
                     )
                 }
             })
         }
     }
-
 }
 
 @Composable
-fun ProfileButtons(
+fun AuthButtons(
     logout: () -> Unit,
     deleteAccount: () -> Unit,
+    changePassword: (String) -> Unit,
     onEdit: (PopupContent) -> Unit,
+    onEditPassword: (PopupContent) -> Unit,
     onDismiss: () -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
         Spacer(modifier = Modifier.height(10.dp))
-        GeneralButton(text = "Change password", onClick = {})
+        GeneralButton(text = "Change password", onClick = {
+            onEditPassword(
+                PopupContent(
+                    title = "Change password",
+                    label = "New password",
+                    onDismiss = { onDismiss() },
+                    onConfirm = { changePassword(it) }
+                )
+            )
+        })
         GeneralButton(text = "Change profile picture", onClick = {})
         GeneralButton(
             text = "Log out",
@@ -101,7 +127,6 @@ fun ProfileButtons(
                     PopupContent(
                         title = "Log out",
                         content = "Are you sure you want to log out?",
-                        toastText = "Logged out",
                         confirmButton = "Log out",
                         onDismiss = { onDismiss() },
                         onConfirm = { logout() }
@@ -119,7 +144,6 @@ fun ProfileButtons(
                         title = "Delete account",
                         content = "Are you sure you want to delete your account?",
                         confirmButton = "Delete",
-                        toastText = "Account deleted",
                         onDismiss = { onDismiss() },
                         onConfirm = { deleteAccount() }
                     )
@@ -131,48 +155,50 @@ fun ProfileButtons(
 
 @Composable
 fun Profile(
+    driver: Driver,
     onTextEdit: (PopupContent) -> Unit,
+    onChoiceEdit: (PopupContent) -> Unit,
     onDismiss: () -> Unit,
+    changeUserName: (String) -> Unit,
+    changeEmail: (String) -> Unit,
+    changePhone: (String) -> Unit,
+    changeWalletAddress: (String) -> Unit
 ) {
     EditableContentLabel(label = "Username",
-        text = "Daan Hautekiet",
+        text = driver.person.name,
         onEdit = onTextEdit,
         popupContent = PopupContent(
             title = "Change username",
             label = "New username",
-            toastText = "Username changed",
             onDismiss = { onDismiss() },
-            onConfirm = {}
+            onConfirm = { changeUserName(it) }
         ))
     EditableContentLabel(label = "Email",
-        text = "daan.hautekiet@gmail.com",
+        text = driver.person.email,
         onEdit = onTextEdit,
         popupContent = PopupContent(
             title = "Change email",
             label = "New email",
-            toastText = "Email changed",
             onDismiss = { onDismiss() },
-            onConfirm = {}
+            onConfirm = { changeEmail(it) }
         ))
     EditableContentLabel(label = "Phone number",
-        text = "0472 12 34 56",
+        text = showPhoneNumber(driver.person.phone),
         onEdit = onTextEdit,
         popupContent = PopupContent(
             title = "Change phone number",
             label = "New phone number",
-            toastText = "Phone number changed",
             onDismiss = { onDismiss() },
-            onConfirm = {}
+            onConfirm = { changePhone(it) }
         ))
     EditableContentLabel(label = "Card number",
-        text = "BE12 3456 7890 1234",
-        onEdit = onTextEdit,
+        text = showWalletAddress(driver.walletAddress),
+        onEdit = onChoiceEdit,
         popupContent = PopupContent(
             title = "Change card number",
-            label = "New card number",
-            toastText = "Card number changed",
+            content = "Are you sure you want to change your card number?",
             onDismiss = { onDismiss() },
-            onConfirm = {}
+            onConfirm =  { changeWalletAddress(it) }
         ))
 }
 
