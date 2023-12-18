@@ -36,8 +36,10 @@ fun DeliveryDetailsScreen(
 }
 
 @Composable
-fun DeliveryDetail(label: String, content: String) {
-    Label(text = label)
-    Content(text = content)
-    Spacer(modifier = Modifier.height(10.dp))
+fun DeliveryDetail(label: String, content: String, withSpacer: Boolean = true) {
+    Column() {
+        Label(text = label)
+        Content(text = content)
+        if (withSpacer) Spacer(modifier = Modifier.height(10.dp))
+    }
 }
