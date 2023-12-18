@@ -1,90 +1,139 @@
 package be.howest.jarnelosschaert.delivermedriver.logic.controllers
 
+import android.widget.Toast
 import androidx.navigation.NavController
+import be.howest.jarnelosschaert.deliverme.logic.models.Address
+import be.howest.jarnelosschaert.delivermedriver.logic.AuthUiState
 import be.howest.jarnelosschaert.delivermedriver.logic.data.SignUp
+import be.howest.jarnelosschaert.delivermedriver.logic.data.defaultDriver
+import be.howest.jarnelosschaert.delivermedriver.logic.helpers.checkValuesSignUp
+import be.howest.jarnelosschaert.delivermedriver.logic.services.AuthService
+import be.howest.jarnelosschaert.delivermedriver.logic.services.responses.RegistrationLoginResponse
 import be.howest.jarnelosschaert.delivermedriver.ui.AuthorizeScreens
 
 class AuthController(
     private val navController: NavController
 ) {
-    private var isLoggedIn: Boolean = false
+    private val authService = AuthService()
+    val uiState = AuthUiState()
 
-    fun login() {
-        isLoggedIn = true
-        navController.navigate(AuthorizeScreens.App.route)
+    private var _signUp: SignUp = SignUp("", "", "", "", "", "")
+
+    fun login(email: String, password: String) {
+        clearErrors()
+        authService.login(
+            email,
+            password,
+            { handleLoginSignUpSuccess(it) },
+            { handleLoginFailure(it) })
+    }
+
+    fun updateDriver(
+        name: String? = null,
+        email: String? = null,
+        phone: String? = null,
+        walletAddress: String? = null
+    ) {
+        val updatedPerson = uiState.driver.person.copy(
+            name = name ?: uiState.driver.person.name,
+            email = email ?: uiState.driver.person.email,
+            phone = phone ?: uiState.driver.person.phone
+        )
+        val updatedDriver = uiState.driver.copy(
+            person = updatedPerson,
+            walletAddress = walletAddress ?: uiState.driver.walletAddress
+        )
+        authService.updateDriver(
+            uiState.jwt,
+            updatedDriver.id,
+            updatedDriver.person.name,
+            updatedDriver.person.email,
+            updatedDriver.person.phone,
+            updatedDriver.walletAddress,
+            handleSuccess = {
+                uiState.driver = updatedDriver
+                Toast.makeText(navController.context, "Account updated", Toast.LENGTH_SHORT).show()
+            },
+            handleFailure = {
+                Toast.makeText(navController.context, "Account update failed", Toast.LENGTH_SHORT).show()
+            }
+        )
+    }
+
+    fun changePassword(password: String) {
+        authService.changePassword(
+            uiState.jwt,
+            password,
+            handleSuccess = {
+                Toast.makeText(navController.context, "Password changed", Toast.LENGTH_SHORT).show()
+            },
+            handleFailure = {
+                Toast.makeText(navController.context, "Password change failed", Toast.LENGTH_SHORT).show()
+            }
+        )
     }
 
     fun logout() {
-        isLoggedIn = false
         navController.navigate(AuthorizeScreens.Login.route)
+        uiState.jwt = ""
+        uiState.driver = defaultDriver
+        Toast.makeText(navController.context, "Logged out", Toast.LENGTH_SHORT).show()
     }
 
-    fun signUp(signUp: SignUp) : List<String> {
-        val errors = checkValuesSignUp(signUp.username, signUp.email, signUp.phone, signUp.cardNumber, signUp.password, signUp.confirmPassword)
-        if (errors.isEmpty()) {
-            login()
+    fun checkSignUp(signUp: SignUp) {
+        clearErrors()
+        uiState.signUpErrors = checkValuesSignUp(
+            signUp.username,
+            signUp.email,
+            signUp.phone,
+            signUp.walletAddress,
+            signUp.password,
+            signUp.confirmPassword
+        )
+        if (uiState.signUpErrors.isEmpty()) {
+            _signUp = signUp
+            authService.signUp(
+                _signUp.username,
+                _signUp.email,
+                _signUp.phone,
+                _signUp.password,
+                _signUp.walletAddress,
+                { handleLoginSignUpSuccess(it) },
+                { handleSignUpFailure(it) }
+            )
         }
-        return errors
+
     }
 
-    fun deleteAccount() {
-        logout()
+    fun deleteDriver() {
+        authService.deleteDriver(uiState.jwt, uiState.driver.id,
+            handleSuccess = {
+                logout()
+                Toast.makeText(navController.context, "Account deleted", Toast.LENGTH_SHORT).show()
+            },
+            handleFailure = {
+                Toast.makeText(navController.context, "Failed", Toast.LENGTH_SHORT).show()
+            }
+        )
     }
 
-    fun isLoggedIn(): Boolean {
-        return isLoggedIn
+    private fun handleLoginSignUpSuccess(response: RegistrationLoginResponse) {
+        uiState.jwt = response.jwt
+        uiState.driver = response.driver
+        navController.navigate(AuthorizeScreens.App.route)
+        clearErrors()
     }
 
-    private fun checkValuesSignUp(
-        username: String,
-        email: String,
-        phone: String,
-        cardNumber: String,
-        password: String,
-        confirmPassword: String
-    ): List<String> {
-        val errors = mutableListOf<String>()
-
-        if (username.isBlank()) {
-            errors.add("Username is required.")
-        }
-
-        if (email.isBlank()) {
-            errors.add("Email is required.")
-        } else if (!isValidEmail(email)) {
-            errors.add("Invalid email format.")
-        }
-
-        if (phone.isBlank()) {
-            errors.add("Phone number is required.")
-        } else if (!isValidPhoneNumber(phone)) {
-            errors.add("Invalid phone number format.")
-        }
-
-        if (cardNumber.isBlank()) {
-            errors.add("Card number is required.")
-        } else if (cardNumber.length != 16) {
-            errors.add("Card number must be 16 characters long.")
-        }
-
-        if (password.isBlank()) {
-            errors.add("Password is required.")
-        } else if (password.length < 8) {
-            errors.add("Password must be at least 8 characters long.")
-        } else if (password != confirmPassword) {
-            errors.add("Passwords do not match.")
-        }
-
-        return errors
+    private fun handleLoginFailure(error: String) {
+        uiState.loginErrors = listOf(error)
     }
 
-    private fun isValidEmail(email: String): Boolean {
-        val emailRegex = "^[A-Za-z](.*)(@)(.+)(\\.)(.+)"
-        return email.matches(emailRegex.toRegex())
+    private fun handleSignUpFailure(error: String) {
+        uiState.signUpErrors = listOf(error)
     }
 
-    private fun isValidPhoneNumber(phone: String): Boolean {
-        val cleanedPhoneNumber = phone.replace(Regex("\\D"), "")
-        return cleanedPhoneNumber.startsWith("0") && cleanedPhoneNumber.length == 10
+    private fun clearErrors() {
+        uiState.loginErrors = emptyList()
+        uiState.signUpErrors = emptyList()
     }
 }

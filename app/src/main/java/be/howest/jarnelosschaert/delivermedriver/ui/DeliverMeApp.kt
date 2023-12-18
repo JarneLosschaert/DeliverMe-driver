@@ -17,7 +17,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import be.howest.jarnelosschaert.delivermedriver.logic.controllers.AuthController
-import be.howest.jarnelosschaert.delivermedriver.logic.controllers.DeliverMeController
+import be.howest.jarnelosschaert.delivermedriver.logic.controllers.AppController
 import be.howest.jarnelosschaert.delivermedriver.ui.helpers.components.roundedBottomNav
 import be.howest.jarnelosschaert.delivermedriver.ui.screens.NotificationsScreen
 import be.howest.jarnelosschaert.delivermedriver.ui.screens.DeliveryDetailsScreen
@@ -73,7 +73,7 @@ private fun AuthScreenNavigationConfigurations(
     authController: AuthController,
     onNavigation: (String) -> Unit
 ) {
-    val controller = DeliverMeController(navController)
+    val controller = AppController(navController)
 
     NavHost(navController, startDestination = BottomNavigationScreens.Home.route) {
         composable(BottomNavigationScreens.Home.route) {

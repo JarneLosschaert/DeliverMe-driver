@@ -4,7 +4,7 @@ import androidx.navigation.NavController
 import be.howest.jarnelosschaert.delivermedriver.logic.UiState
 import be.howest.jarnelosschaert.delivermedriver.ui.BottomNavigationScreens
 
-class DeliverMeController(private val navController: NavController) {
+class AppController(private val navController: NavController) {
     val uiState: UiState = UiState()
 
     fun goBack() {

@@ -2,7 +2,6 @@ package be.howest.jarnelosschaert.delivermedriver.logic.services
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import be.howest.jarnelosschaert.delivermedriver.logic.models.Customer
 import be.howest.jarnelosschaert.delivermedriver.logic.models.Driver
 import be.howest.jarnelosschaert.delivermedriver.logic.services.other.RetrofitInstance
 import be.howest.jarnelosschaert.delivermedriver.logic.services.requests.LoginRequest
@@ -60,7 +59,7 @@ class AuthService : ViewModel() {
         }
     }
 
-    fun updateCustomer(
+    fun updateDriver(
         jwt: String,
         id: Int,
         username: String,

@@ -6,6 +6,7 @@ fun checkValuesSignUp(
     username: String,
     email: String,
     phone: String,
+    walletAddress: String,
     password: String,
     confirmPassword: String
 ): List<String> {
@@ -27,6 +28,12 @@ fun checkValuesSignUp(
         errors.add("Invalid phone number format (ex: 0499999999).")
     }
 
+    if (walletAddress.isBlank()) {
+        errors.add("Wallet address is required.")
+    } else if (!isValidWalletAddress(walletAddress)) {
+        errors.add("Invalid wallet address format.")
+    }
+
     if (password.isBlank()) {
         errors.add("Password is required.")
     } else if (password.length < 8) {
@@ -46,6 +53,11 @@ private fun isValidEmail(email: String): Boolean {
 private fun isValidPhoneNumber(phone: String): Boolean {
     val cleanedPhoneNumber = phone.replace(Regex("\\D"), "")
     return cleanedPhoneNumber.startsWith("0") && cleanedPhoneNumber.length == 10
+}
+
+private fun isValidWalletAddress(walletAddress: String): Boolean {
+    val walletAddressRegex = "^(0x)?[\\da-fA-F]{40}\$"
+    return walletAddress.matches(walletAddressRegex.toRegex())
 }
 
 fun checkAddress(Address: Address): List<String> {
