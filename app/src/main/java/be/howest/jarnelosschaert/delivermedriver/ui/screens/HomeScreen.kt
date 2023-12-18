@@ -16,6 +16,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import be.howest.jarnelosschaert.delivermedriver.R
 import be.howest.jarnelosschaert.delivermedriver.logic.models.Delivery
+import be.howest.jarnelosschaert.delivermedriver.ui.helpers.components.Content
 import be.howest.jarnelosschaert.delivermedriver.ui.helpers.components.Title
 import be.howest.jarnelosschaert.delivermedriver.ui.helpers.functions.showAddress
 import com.google.accompanist.swiperefresh.SwipeRefresh
@@ -39,13 +40,20 @@ fun HomeScreen(
                 state = rememberSwipeRefreshState(isRefreshing = refreshing),
                 onRefresh = onRefreshDeliveries,
             ) {
-                LazyColumn(content = {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(),
+                    content = {
                     item {
                         for (delivery in deliveries) {
                             DeliveryCard(
                                 delivery = delivery,
                                 onDeliveryTap = { onDeliveryTap(delivery) }
                             )
+                        }
+                        if (deliveries.isEmpty()) {
+                            Content(text = "No deliveries found")
                         }
                     }
                 })

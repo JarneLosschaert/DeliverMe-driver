@@ -38,7 +38,7 @@ class AppController(
                 println(deliveries[0].id)
             },
             handleFailure = { message ->
-                Toast.makeText(navController.context, message, Toast.LENGTH_SHORT).show()
+                println(message)
                 uiState.refreshing = false
             }
         )
@@ -62,7 +62,9 @@ class AppController(
         uiState.delivery = delivery
         navController.navigate(OtherScreens.DeliveryDetails.route)
     }
-
+    fun onSortChange(sort: String) {
+        uiState.sort = sort
+    }
     fun goBack() {
         if (navController.currentDestination?.route == BottomNavigationScreens.Home.route) {
             //uiState.showExitDialog = true
@@ -70,12 +72,7 @@ class AppController(
             navController.popBackStack()
         }
     }
-
     fun navigateTo(route: String) {
         navController.navigate(route)
-    }
-
-    fun onSortChange(sort: String) {
-        uiState.sort = sort
     }
 }
