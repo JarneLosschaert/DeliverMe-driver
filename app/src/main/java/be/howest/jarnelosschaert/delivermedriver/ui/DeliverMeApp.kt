@@ -19,10 +19,7 @@ import androidx.navigation.compose.rememberNavController
 import be.howest.jarnelosschaert.delivermedriver.logic.controllers.AppController
 import be.howest.jarnelosschaert.delivermedriver.logic.controllers.AuthController
 import be.howest.jarnelosschaert.delivermedriver.ui.helpers.components.roundedBottomNav
-import be.howest.jarnelosschaert.delivermedriver.ui.screens.DeliveryDetailsScreen
-import be.howest.jarnelosschaert.delivermedriver.ui.screens.HomeScreen
-import be.howest.jarnelosschaert.delivermedriver.ui.screens.NotificationsScreen
-import be.howest.jarnelosschaert.delivermedriver.ui.screens.SettingScreen
+import be.howest.jarnelosschaert.delivermedriver.ui.screens.*
 import be.howest.jarnelosschaert.delivermedriver.ui.screens.settingScreens.ProfileScreen
 
 sealed class BottomNavigationScreens(val route: String, val icon: ImageVector) {
@@ -75,15 +72,26 @@ private fun AuthScreenNavigationConfigurations(
 
     NavHost(navController, startDestination = BottomNavigationScreens.Home.route) {
         composable(BottomNavigationScreens.Home.route) {
-            HomeScreen(
-                modifier = modifier,
-                deliveries = controller.uiState.deliveries,
-                sort = controller.uiState.sort,
-                refreshing = controller.uiState.refreshing,
-                onDeliveryTap = { controller.onDeliveryTap(it) },
-                onSortChange = { controller.onSortChange(it) },
-                onRefreshDeliveries = { controller.loadDeliveries(refreshing = true) },
-            )
+            if (controller.uiState.activeDelivery == null) {
+                HomeScreen(
+                    modifier = modifier,
+                    deliveries = controller.uiState.deliveries,
+                    sort = controller.uiState.sort,
+                    refreshing = controller.uiState.refreshing,
+                    onDeliveryTap = { controller.onDeliveryTap(it) },
+                    onSortChange = { controller.onSortChange(it) },
+                    onRefreshDeliveries = { controller.loadDeliveries(refreshing = true) },
+                )
+            } else {
+                DeliveringScreen(
+                    modifier = modifier,
+                    delivery = controller.uiState.activeDelivery!!,
+                    onReceivedTap = { controller.onReceivedTap() },
+                    onDeliveredTap = { controller.onDeliveredTap() },
+                    onNavigateTap = { controller.navigateAddress() },
+                )
+            }
+
             onNavigation(BottomNavigationScreens.Home.route)
         }
         composable(BottomNavigationScreens.Notifications.route) {
@@ -115,7 +123,7 @@ private fun AuthScreenNavigationConfigurations(
         }
         composable(OtherScreens.DeliveryDetails.route) {
             DeliveryDetailsScreen(modifier = modifier,
-                delivery = controller.uiState.delivery,
+                delivery = controller.uiState.selectedDelivery,
                 onAssignTap = { controller.onAssignTap() },
                 onGoBack = { controller.goBack() }
             )

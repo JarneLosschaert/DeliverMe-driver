@@ -1,5 +1,6 @@
 package be.howest.jarnelosschaert.delivermedriver
 
+import SocketApp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -15,12 +16,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             DeliverMedriverTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    Authorize()
+                    SocketApp()
                 }
             }
         }

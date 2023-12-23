@@ -107,7 +107,7 @@ fun AuthButtons(
         modifier = Modifier.fillMaxWidth()
     ) {
         Spacer(modifier = Modifier.height(10.dp))
-        GeneralButton(text = "Change password", onClick = {
+        GeneralButton(text = "Change password", onTap = {
             onEditPassword(
                 PopupContent(
                     title = "Change password",
@@ -117,12 +117,12 @@ fun AuthButtons(
                 )
             )
         })
-        GeneralButton(text = "Change profile picture", onClick = {})
+        GeneralButton(text = "Change profile picture", onTap = {})
         GeneralButton(
             text = "Log out",
             isError = true,
             modifier = Modifier.align(Alignment.End),
-            onClick = {
+            onTap = {
                 onEdit(
                     PopupContent(
                         title = "Log out",
@@ -138,7 +138,7 @@ fun AuthButtons(
             text = "Delete account",
             isError = true,
             modifier = Modifier.align(Alignment.End),
-            onClick = {
+            onTap = {
                 onEdit(
                     PopupContent(
                         title = "Delete account",

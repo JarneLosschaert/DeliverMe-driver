@@ -12,5 +12,7 @@ class AppUiState : ViewModel() {
     var sort by mutableStateOf("route_asc")
     var refreshing by mutableStateOf(false)
 
-    var delivery: Delivery by mutableStateOf(defaultDelivery)
+    var selectedDelivery: Delivery by mutableStateOf(defaultDelivery)
+
+    var activeDelivery: Delivery? by mutableStateOf(null)
 }

@@ -43,7 +43,7 @@ fun LoginScreen(
                     Errors(errors = errors)
                     GeneralButton(
                         text = "Log in",
-                        onClick = { login(email, password) },
+                        onTap = { login(email, password) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(16.dp)

@@ -30,7 +30,7 @@ fun DeliveryDetailsScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
-                onClick = onAssignTap
+                onTap = onAssignTap
             )
         }
     }

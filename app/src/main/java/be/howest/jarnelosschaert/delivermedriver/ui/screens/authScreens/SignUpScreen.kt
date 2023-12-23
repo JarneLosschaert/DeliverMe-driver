@@ -45,7 +45,7 @@ fun SignUpScreen(
                         Errors(errors = errors)
                         GeneralButton(
                             text = "Sign up",
-                            onClick = { signUp(SignUp(username, email, phone, walletAddress, password, confirmPassword)) },
+                            onTap = { signUp(SignUp(username, email, phone, walletAddress, password, confirmPassword)) },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(16.dp)

@@ -37,4 +37,10 @@ interface ApiService {
         @Header("Authorization") authToken: String,
         @Path("id") deliveryId: Int,
     ): Delivery
+    @PUT("/deliveries/{id}")
+    suspend fun updateDelivery(
+        @Header("Authorization") authToken: String,
+        @Path("id") deliveryId: Int,
+        @Body delivery: Delivery,
+    ): Delivery
 }

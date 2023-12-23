@@ -73,4 +73,11 @@ dependencies {
 
     // Swipe refresh
     implementation 'com.google.accompanist:accompanist-swiperefresh:0.24.13-rc'
+
+    // Notifier
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2"
+    implementation "com.squareup.okhttp3:okhttp:4.9.1"
+    implementation "com.squareup.okhttp3:logging-interceptor:4.9.1"
+    implementation "com.google.accompanist:accompanist-systemuicontroller:0.18.0"
 }

@@ -113,13 +113,13 @@ fun ContentLabel(label: String, content: String) {
 fun GeneralButton(
     modifier: Modifier = Modifier,
     text: String = "See details",
-    onClick: () -> Unit,
+    onTap: () -> Unit,
     isError: Boolean = false
 ) {
     var color = MaterialTheme.colors.primary
     if (isError) color = MaterialTheme.colors.primaryVariant
     Button(
-        onClick = onClick,
+        onClick = onTap,
         modifier = modifier,
         colors = ButtonDefaults.buttonColors(backgroundColor = color)
     ) {
@@ -214,6 +214,6 @@ fun AuthBottomNavigate(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Label(text = label)
-        GeneralButton(text = text, onClick = navigate, modifier = Modifier.padding(start = 30.dp))
+        GeneralButton(text = text, onTap = navigate, modifier = Modifier.padding(start = 30.dp))
     }
 }

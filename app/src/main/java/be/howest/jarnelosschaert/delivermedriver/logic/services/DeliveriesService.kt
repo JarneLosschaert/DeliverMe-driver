@@ -44,4 +44,22 @@ class DeliveriesService: ViewModel() {
             }
         }
     }
+
+    fun updateDelivery(
+        jwt: String,
+        id: Int,
+        delivery: Delivery,
+        handleSuccess: (Delivery) -> Unit,
+        handleFailure: (String) -> Unit,
+    ) {
+        viewModelScope.launch {
+            try {
+                val response = apiService.updateDelivery("Bearer $jwt", id, delivery)
+                handleSuccess(response)
+            } catch (e: Exception) {
+                handleFailure("Failed to update delivery")
+                println("Error update delivery: ${e.message}")
+            }
+        }
+    }
 }
