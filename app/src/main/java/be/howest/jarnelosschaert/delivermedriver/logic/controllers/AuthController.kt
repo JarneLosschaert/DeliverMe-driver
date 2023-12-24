@@ -2,7 +2,6 @@ package be.howest.jarnelosschaert.delivermedriver.logic.controllers
 
 import android.widget.Toast
 import androidx.navigation.NavController
-import be.howest.jarnelosschaert.deliverme.logic.models.Address
 import be.howest.jarnelosschaert.delivermedriver.logic.AuthUiState
 import be.howest.jarnelosschaert.delivermedriver.logic.data.SignUp
 import be.howest.jarnelosschaert.delivermedriver.logic.data.defaultDriver

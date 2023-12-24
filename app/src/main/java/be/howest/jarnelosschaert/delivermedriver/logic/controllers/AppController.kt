@@ -70,7 +70,7 @@ class AppController(
             deliveriesService.updateDelivery(
                 authController.uiState.jwt,
                 delivery.id,
-                it,
+                delivery.state,
                 handleSuccess = { newDelivery ->
                     Toast.makeText(navController.context, "Delivery delivered", Toast.LENGTH_SHORT)
                         .show()

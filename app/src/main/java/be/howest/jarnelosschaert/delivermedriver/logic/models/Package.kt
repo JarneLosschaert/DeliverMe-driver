@@ -1,6 +1,5 @@
 package be.howest.jarnelosschaert.delivermedriver.logic.models
 
-import be.howest.jarnelosschaert.deliverme.logic.models.Address
 import com.google.gson.annotations.SerializedName
 
 data class Package(
@@ -11,5 +10,7 @@ data class Package(
     @SerializedName("receiverAddress") val receiverAddress: Address,
     @SerializedName("packageSize") val packageSize: PackageSize,
     @SerializedName("description") val description: String,
-    @SerializedName("fee") val fee: Double
+    @SerializedName("fee") val fee: Double,
+    @SerializedName("driverFee") val driverFee: Double,
+    @SerializedName("distance") val distance: Double,
 )

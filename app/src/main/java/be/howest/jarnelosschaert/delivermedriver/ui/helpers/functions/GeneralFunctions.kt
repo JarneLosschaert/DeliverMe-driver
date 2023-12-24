@@ -1,7 +1,6 @@
 package be.howest.jarnelosschaert.delivermedriver.ui.helpers.functions
 
-import be.howest.jarnelosschaert.deliverme.logic.models.Address
-import be.howest.jarnelosschaert.delivermedriver.logic.models.Driver
+import be.howest.jarnelosschaert.delivermedriver.logic.models.Address
 import java.time.format.DateTimeFormatter
 
 fun showAddress(address: Address): String {

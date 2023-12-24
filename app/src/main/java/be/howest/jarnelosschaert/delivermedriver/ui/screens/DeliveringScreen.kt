@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import be.howest.jarnelosschaert.deliverme.logic.models.Address
+import be.howest.jarnelosschaert.delivermedriver.logic.models.Address
 import be.howest.jarnelosschaert.delivermedriver.logic.models.Delivery
 import be.howest.jarnelosschaert.delivermedriver.logic.models.DeliveryState
 import be.howest.jarnelosschaert.delivermedriver.ui.helpers.components.GeneralButton

@@ -1,7 +1,5 @@
 package be.howest.jarnelosschaert.delivermedriver.logic.helpers
 
-import be.howest.jarnelosschaert.deliverme.logic.models.Address
-
 fun checkValuesSignUp(
     username: String,
     email: String,

@@ -2,11 +2,8 @@ package be.howest.jarnelosschaert.delivermedriver.logic.services.other
 
 import be.howest.jarnelosschaert.delivermedriver.logic.models.Delivery
 import be.howest.jarnelosschaert.delivermedriver.logic.models.Driver
-import be.howest.jarnelosschaert.delivermedriver.logic.services.requests.LoginRequest
+import be.howest.jarnelosschaert.delivermedriver.logic.services.requests.*
 import be.howest.jarnelosschaert.delivermedriver.logic.services.responses.RegistrationLoginResponse
-import be.howest.jarnelosschaert.delivermedriver.logic.services.requests.RegisterRequest
-import be.howest.jarnelosschaert.delivermedriver.logic.services.requests.UpdateDriverRequest
-import be.howest.jarnelosschaert.delivermedriver.logic.services.requests.UpdatePasswordRequest
 import retrofit2.http.*
 
 interface ApiService {
@@ -41,6 +38,6 @@ interface ApiService {
     suspend fun updateDelivery(
         @Header("Authorization") authToken: String,
         @Path("id") deliveryId: Int,
-        @Body delivery: Delivery,
+        @Body updateDeliveryRequest: UpdateDeliveryRequest,
     ): Delivery
 }

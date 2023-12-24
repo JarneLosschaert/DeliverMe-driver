@@ -2,11 +2,10 @@ package be.howest.jarnelosschaert.delivermedriver.logic.services
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import be.howest.jarnelosschaert.deliverme.logic.models.Address
 import be.howest.jarnelosschaert.delivermedriver.logic.models.Delivery
-import be.howest.jarnelosschaert.delivermedriver.logic.models.Package
-import be.howest.jarnelosschaert.delivermedriver.logic.models.PackageSize
+import be.howest.jarnelosschaert.delivermedriver.logic.models.DeliveryState
 import be.howest.jarnelosschaert.delivermedriver.logic.services.other.RetrofitInstance
+import be.howest.jarnelosschaert.delivermedriver.logic.services.requests.UpdateDeliveryRequest
 import kotlinx.coroutines.launch
 
 class DeliveriesService: ViewModel() {
@@ -48,13 +47,14 @@ class DeliveriesService: ViewModel() {
     fun updateDelivery(
         jwt: String,
         id: Int,
-        delivery: Delivery,
+        state: DeliveryState,
         handleSuccess: (Delivery) -> Unit,
         handleFailure: (String) -> Unit,
     ) {
+        val updateDeliveryRequest = UpdateDeliveryRequest(state)
         viewModelScope.launch {
             try {
-                val response = apiService.updateDelivery("Bearer $jwt", id, delivery)
+                val response = apiService.updateDelivery("Bearer $jwt", id, updateDeliveryRequest)
                 handleSuccess(response)
             } catch (e: Exception) {
                 handleFailure("Failed to update delivery")

@@ -1,6 +1,5 @@
 package be.howest.jarnelosschaert.delivermedriver.logic.models
 
-import be.howest.jarnelosschaert.deliverme.logic.models.Address
 import com.google.gson.annotations.SerializedName
 
 data class Driver(
