@@ -13,3 +13,5 @@ val defaultDelivery = Delivery(-1, LocalDateTime.now(), LocalDateTime.now(), Del
 val defaultContactPerson = Person(-1, "No contacts yet", "", "")
 val defaultContactAddress = Address(-1, "Street", "Nr", "Zip", "City" , 0.0, 0.0)
 val defaultContact = Customer(-1, defaultContactAddress, defaultContactPerson, listOf())
+
+val defaultSort = Sort.DISTANCE_DESC

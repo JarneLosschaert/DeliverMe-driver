@@ -20,6 +20,3 @@ fun showWalletAddress(walletAddress: String): String {
     }
     return walletAddress
 }
-
-val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy")
-val timeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")

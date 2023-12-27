@@ -8,17 +8,19 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import be.howest.jarnelosschaert.delivermedriver.R
+import be.howest.jarnelosschaert.delivermedriver.logic.data.Sort
 import be.howest.jarnelosschaert.delivermedriver.logic.models.Delivery
 import be.howest.jarnelosschaert.delivermedriver.ui.helpers.components.Content
 import be.howest.jarnelosschaert.delivermedriver.ui.helpers.components.SubTitle
 import be.howest.jarnelosschaert.delivermedriver.ui.helpers.components.Title
+import be.howest.jarnelosschaert.delivermedriver.ui.helpers.functions.HandleLocationPermissions
 import be.howest.jarnelosschaert.delivermedriver.ui.helpers.functions.showAddress
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -28,16 +30,18 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 fun DeliveriesScreen(
     modifier: Modifier = Modifier,
     deliveries: List<Delivery>,
-    sort: String,
+    sort: Sort,
     refreshing: Boolean,
     onDeliveryTap: (Delivery) -> Unit,
-    onSortChange: (String) -> Unit,
+    onSortChange: (Sort) -> Unit,
     onRefreshDeliveries: () -> Unit,
 ) {
+    var granted by remember { mutableStateOf(false) }
+    HandleLocationPermissions(onPermission = { granted = it })
     Box(modifier = modifier.fillMaxWidth()) {
         Column {
             Title(text = "Deliveries")
-            SortOptions(sort = sort, onSortChange = onSortChange)
+            SortOptions(sort = sort, onSortChange = onSortChange, granted = granted)
             SwipeRefresh(
                 state = rememberSwipeRefreshState(isRefreshing = refreshing),
                 onRefresh = onRefreshDeliveries,
@@ -47,7 +51,7 @@ fun DeliveriesScreen(
                         .fillMaxSize(),
                     content = {
                         item {
-                            SubTitle(text = "Search deliveries")
+                            SubTitle(text = "Search Deliveries")
                             for (delivery in deliveries) {
                                 DeliveryCard(
                                     delivery = delivery,
@@ -66,23 +70,37 @@ fun DeliveriesScreen(
 
 @Composable
 fun SortOptions(
-    sort: String,
-    onSortChange: (String) -> Unit
+    granted: Boolean,
+    sort: Sort,
+    onSortChange: (Sort) -> Unit
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth(),
     ) {
-        SortOption(image = R.drawable.route, onClick = { onSortChange("route_asc") }, selected = sort == "route_asc")
-        SortOption(image = R.drawable.clock, onClick = { onSortChange("time_asc") }, selected = sort == "time_asc")
-        SortOption(image = R.drawable.clock, onClick = { onSortChange("time_desc") }, ascending = false, selected = sort == "time_desc")
+        SortOption(
+            onClick = { onSortChange(Sort.DISTANCE_DESC) },
+            selected = sort == Sort.DISTANCE_DESC,
+            isDistance = true
+        )
+        SortOption(
+            onClick = { onSortChange(Sort.DISTANCE_ASC) },
+            ascending = false,
+            selected = sort == Sort.DISTANCE_ASC,
+            isDistance = true
+        )
+        if (granted) {
+            SortOption(onClick = { onSortChange(Sort.CLOSEST) }, selected = sort == Sort.CLOSEST)
+        }
     }
     Box(modifier = Modifier.height(20.dp))
 }
 
 @Composable
 fun SortOption(
-    image: Int,
+    image: Int = R.drawable.route,
+    text: String = "km",
+    isDistance: Boolean = false,
     ascending: Boolean = true,
     selected: Boolean = false,
     onClick: () -> Unit
@@ -101,15 +119,20 @@ fun SortOption(
         Row(
             modifier = Modifier
                 .padding(10.dp),
+            horizontalArrangement = Arrangement.SpaceAround
         ) {
             val color =
                 if (selected) MaterialTheme.colors.onPrimary else MaterialTheme.colors.onBackground
-            Image(
-                painter = painterResource(id = image),
-                contentDescription = null,
-                modifier = Modifier.size(20.dp),
-                colorFilter = ColorFilter.tint(color)
-            )
+            if (isDistance) {
+                Content(text = text, color = color)
+            } else {
+                Image(
+                    painter = painterResource(id = image),
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp),
+                    colorFilter = ColorFilter.tint(color)
+                )
+            }
             if (ascending) {
                 Image(
                     painter = painterResource(id = R.drawable.arrow_up),
@@ -147,8 +170,16 @@ fun DeliveryCard(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            DeliveryDetail(label = "Distance", content = "${delivery.packageInfo.distance} km", withSpacer = false)
-            DeliveryDetail(label = "Payment", content = "€ ${delivery.packageInfo.fee}", withSpacer = false)
+            DeliveryDetail(
+                label = "Distance",
+                content = "${delivery.packageInfo.distance} km",
+                withSpacer = false
+            )
+            DeliveryDetail(
+                label = "Payment",
+                content = "€ ${delivery.packageInfo.driverFee}",
+                withSpacer = false
+            )
         }
     }
     Spacer(modifier = Modifier.height(10.dp))

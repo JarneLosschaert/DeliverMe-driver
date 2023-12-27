@@ -38,8 +38,9 @@ fun DeliveringScreen(
                 label = "Address (receiver)",
                 content = showAddress(delivery.packageInfo.receiverAddress)
             )
+            DeliveryDetail(label = "Size", content = delivery.packageInfo.packageSize.value)
             DeliveryDetail(label = "Distance", content = "${delivery.packageInfo.distance} km")
-            DeliveryDetail(label = "Payment", content = "€ ${delivery.packageInfo.fee}")
+            DeliveryDetail(label = "Payment", content = "€ ${delivery.packageInfo.driverFee}")
             GeneralButton(
                 text = "Navigate",
                 onTap = {

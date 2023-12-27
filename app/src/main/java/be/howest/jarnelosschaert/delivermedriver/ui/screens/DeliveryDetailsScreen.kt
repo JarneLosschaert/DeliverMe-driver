@@ -18,13 +18,13 @@ fun DeliveryDetailsScreen(
     Box(modifier = modifier.fillMaxWidth()) {
         Column {
             Title(text = "Delivery details", onGoBack = onGoBack, withGoBack = true)
-
             DeliveryDetail(label = "Sender", content = delivery.packageInfo.sender.person.name)
             DeliveryDetail(label = "Address (sender)", content = showAddress(delivery.packageInfo.senderAddress))
             DeliveryDetail(label = "Receiver", content = delivery.packageInfo.receiver.person.name)
             DeliveryDetail(label = "Address (receiver)", content = showAddress(delivery.packageInfo.receiverAddress))
-            DeliveryDetail(label = "Expected delivery time", content = "10 min")
-            DeliveryDetail(label = "Payment", content = "€ ${delivery.packageInfo.fee}")
+            DeliveryDetail(label = "Size", content = delivery.packageInfo.packageSize.value)
+            DeliveryDetail(label = "Distance", content = "${delivery.packageInfo.distance} km")
+            DeliveryDetail(label = "Payment", content = "€ ${delivery.packageInfo.driverFee}")
 
             GeneralButton(text = "Accept delivery",
                 modifier = Modifier

@@ -3,7 +3,11 @@ package be.howest.jarnelosschaert.delivermedriver.logic.controllers
 import android.widget.Toast
 import androidx.navigation.NavController
 import be.howest.jarnelosschaert.delivermedriver.logic.AppUiState
+import be.howest.jarnelosschaert.delivermedriver.logic.data.Sort
+import be.howest.jarnelosschaert.delivermedriver.logic.data.defaultSort
 import be.howest.jarnelosschaert.delivermedriver.logic.helpers.DirectionsApi
+import be.howest.jarnelosschaert.delivermedriver.logic.helpers.getLocation
+import be.howest.jarnelosschaert.delivermedriver.logic.helpers.sortDeliveriesByDistance
 import be.howest.jarnelosschaert.delivermedriver.logic.models.Address
 import be.howest.jarnelosschaert.delivermedriver.logic.models.Delivery
 import be.howest.jarnelosschaert.delivermedriver.logic.models.DeliveryState
@@ -29,7 +33,9 @@ class AppController(
             authController.uiState.jwt,
             handleSuccess = { deliveries ->
                 uiState.deliveries = deliveries
+                onSortChange()
                 uiState.refreshing = false
+                println(deliveries[0].packageInfo.distance)
                 if (refreshing) {
                     Toast.makeText(
                         navController.context,
@@ -118,10 +124,27 @@ class AppController(
         navController.navigate(OtherScreens.ActiveDelivery.route)
     }
 
-    fun onSortChange(sort: String) {
+    fun onSortChange(sort: Sort = defaultSort) {
+        when (sort) {
+            Sort.DISTANCE_DESC -> {
+                uiState.deliveries = uiState.deliveries.sortedByDescending { it.packageInfo.distance }
+            }
+            Sort.DISTANCE_ASC -> {
+                uiState.deliveries = uiState.deliveries.sortedBy { it.packageInfo.distance }
+            }
+            Sort.CLOSEST -> {
+                getLocation(
+                    navController.context,
+                    onLocationResult = { location ->
+                        if (location != null) {
+                            uiState.deliveries = sortDeliveriesByDistance(location, uiState.deliveries)
+                        }
+                    }
+                )
+            }
+        }
         uiState.sort = sort
     }
-
     fun navigateAddress(address: Address) {
         DirectionsApi.openGoogleMapsNavigationToB(navController.context, address.lat, address.lon)
     }

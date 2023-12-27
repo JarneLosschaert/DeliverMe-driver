@@ -77,13 +77,14 @@ fun Label(text: String) {
 @Composable
 fun Content(
     modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colors.onBackground,
     fontSize: Int = 17,
     text: String,
     isError: Boolean = false
 ) {
     Text(
         text = text,
-        color = if (isError) MaterialTheme.colors.primaryVariant else MaterialTheme.colors.onBackground,
+        color = if (isError) MaterialTheme.colors.primaryVariant else color,
         fontSize = fontSize.sp,
         modifier = modifier,
         fontWeight = if (isError) FontWeight.Bold else FontWeight.Normal,
