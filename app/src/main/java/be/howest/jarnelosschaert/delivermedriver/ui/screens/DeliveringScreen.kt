@@ -3,13 +3,12 @@ package be.howest.jarnelosschaert.delivermedriver.ui.screens
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import be.howest.jarnelosschaert.delivermedriver.logic.models.Address
 import be.howest.jarnelosschaert.delivermedriver.logic.models.Delivery
 import be.howest.jarnelosschaert.delivermedriver.logic.models.DeliveryState
+import be.howest.jarnelosschaert.delivermedriver.ui.helpers.components.FingerPrintButton
 import be.howest.jarnelosschaert.delivermedriver.ui.helpers.components.GeneralButton
 import be.howest.jarnelosschaert.delivermedriver.ui.helpers.components.SubTitle
 import be.howest.jarnelosschaert.delivermedriver.ui.helpers.components.Title
@@ -51,22 +50,10 @@ fun DeliveringScreen(
                     }
                 })
             if (delivery.state == DeliveryState.ASSIGNED) {
-                GeneralButton(
-                    text = "Package received",
-                    onTap = onReceivedTap,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                )
+                FingerPrintButton(text = "Package received", onSuccess = onReceivedTap)
             }
             if (delivery.state == DeliveryState.TRANSIT) {
-                GeneralButton(
-                    text = "Package delivered",
-                    onTap = onDeliveredTap,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                )
+                FingerPrintButton(text = "Package delivered", onSuccess = onDeliveredTap)
             }
         }
     }

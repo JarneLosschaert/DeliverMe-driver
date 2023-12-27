@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import be.howest.jarnelosschaert.deliverme.ui.helpers.components.GeneralPopup
 import be.howest.jarnelosschaert.deliverme.ui.helpers.components.GeneralTextPopup
+import be.howest.jarnelosschaert.delivermedriver.ui.helpers.components.FingerPrintButton
 import be.howest.jarnelosschaert.delivermedriver.ui.helpers.components.Title
 
 sealed class Setting {

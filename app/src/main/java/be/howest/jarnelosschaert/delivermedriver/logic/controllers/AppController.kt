@@ -35,7 +35,6 @@ class AppController(
                 uiState.deliveries = deliveries
                 onSortChange()
                 uiState.refreshing = false
-                println(deliveries[0].packageInfo.distance)
                 if (refreshing) {
                     Toast.makeText(
                         navController.context,
@@ -95,7 +94,6 @@ class AppController(
     fun onDeliveredTap() {
         val newDelivery = uiState.selectedActiveDelivery.copy(state = DeliveryState.DELIVERED)
         updateDelivery(newDelivery)
-        navigateTo(BottomNavigationScreens.Home.route)
     }
 
     private fun updateDelivery(delivery: Delivery) {
@@ -107,6 +105,10 @@ class AppController(
                 Toast.makeText(navController.context, "Delivery updated", Toast.LENGTH_SHORT)
                     .show()
                 uiState.selectedActiveDelivery = newDelivery
+                if (newDelivery.state == DeliveryState.DELIVERED) {
+                    navigateTo(BottomNavigationScreens.Home.route)
+                }
+
             },
             handleFailure = { message ->
                 Toast.makeText(navController.context, message, Toast.LENGTH_SHORT).show()
@@ -136,6 +138,7 @@ class AppController(
                 getLocation(
                     navController.context,
                     onLocationResult = { location ->
+                        println(location)
                         if (location != null) {
                             uiState.deliveries = sortDeliveriesByDistance(location, uiState.deliveries)
                         }

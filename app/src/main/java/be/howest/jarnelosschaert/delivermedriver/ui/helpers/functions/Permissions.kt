@@ -22,7 +22,8 @@ fun HandleLocationPermissions(onPermission: (Boolean) -> Unit) {
     }
 
     if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
-        == android.content.pm.PackageManager.PERMISSION_GRANTED) {
+        == android.content.pm.PackageManager.PERMISSION_GRANTED
+    ) {
         onPermission(true)
     } else {
         LaunchedEffect(true) {
