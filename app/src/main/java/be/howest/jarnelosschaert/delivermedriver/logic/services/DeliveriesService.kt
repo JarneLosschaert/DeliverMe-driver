@@ -26,7 +26,21 @@ class DeliveriesService: ViewModel() {
             }
         }
     }
-
+    fun getActiveDeliveries(
+        jwt: String,
+        handleSuccess: (List<Delivery>) -> Unit,
+        handleFailure: (String) -> Unit,
+    ) {
+        viewModelScope.launch {
+            try {
+                val response = apiService.getActiveDeliveries("Bearer $jwt", true)
+                handleSuccess(response)
+            } catch (e: Exception) {
+                handleFailure("Failed to get active deliveries")
+                println("Error get active deliveries: ${e.message}")
+            }
+        }
+    }
     fun assignDelivery(
         jwt: String,
         id: Int,

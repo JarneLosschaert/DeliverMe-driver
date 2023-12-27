@@ -3,8 +3,10 @@ package be.howest.jarnelosschaert.delivermedriver.ui.screens
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import be.howest.jarnelosschaert.delivermedriver.logic.models.Address
 import be.howest.jarnelosschaert.delivermedriver.logic.models.Delivery
 import be.howest.jarnelosschaert.delivermedriver.logic.models.DeliveryState
@@ -17,13 +19,14 @@ import be.howest.jarnelosschaert.delivermedriver.ui.helpers.functions.showAddres
 fun DeliveringScreen(
     modifier: Modifier = Modifier,
     delivery: Delivery,
+    onGoBack: () -> Unit,
     onReceivedTap: () -> Unit,
     onDeliveredTap: () -> Unit,
     onNavigateTap: (Address) -> Unit,
 ) {
     Box(modifier = modifier.fillMaxWidth()) {
         Column {
-            Title()
+            Title(text = "Active delivery", onGoBack = onGoBack, withGoBack = true)
             SubTitle(text = "Active delivery")
             DeliveryDetail(label = "Sender", content = delivery.packageInfo.sender.person.name)
             DeliveryDetail(
@@ -35,7 +38,7 @@ fun DeliveringScreen(
                 label = "Address (receiver)",
                 content = showAddress(delivery.packageInfo.receiverAddress)
             )
-            DeliveryDetail(label = "Expected delivery time", content = "10 min")
+            DeliveryDetail(label = "Distance", content = "${delivery.packageInfo.distance} km")
             DeliveryDetail(label = "Payment", content = "€ ${delivery.packageInfo.fee}")
             GeneralButton(
                 text = "Navigate",
@@ -49,13 +52,19 @@ fun DeliveringScreen(
             if (delivery.state == DeliveryState.ASSIGNED) {
                 GeneralButton(
                     text = "Package received",
-                    onTap = onReceivedTap
+                    onTap = onReceivedTap,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
                 )
             }
             if (delivery.state == DeliveryState.TRANSIT) {
                 GeneralButton(
                     text = "Package delivered",
-                    onTap = onDeliveredTap
+                    onTap = onDeliveredTap,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
                 )
             }
         }

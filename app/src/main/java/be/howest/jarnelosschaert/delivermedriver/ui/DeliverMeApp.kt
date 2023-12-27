@@ -4,7 +4,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,12 +26,13 @@ import be.howest.jarnelosschaert.delivermedriver.ui.screens.settingScreens.Profi
 
 sealed class BottomNavigationScreens(val route: String, val icon: ImageVector) {
     object Home : BottomNavigationScreens("home", Icons.Filled.Home)
-    object Notifications : BottomNavigationScreens("notifications", Icons.Filled.Notifications)
+    object Deliveries : BottomNavigationScreens("deliveries", Icons.Filled.Search)
     object Settings : BottomNavigationScreens("settings", Icons.Filled.Settings)
 }
 
 sealed class OtherScreens(val route: String) {
     object Profile : OtherScreens("profile")
+    object ActiveDelivery : OtherScreens("activeDelivery")
     object DeliveryDetails : OtherScreens("deliveryDetails")
 }
 
@@ -38,7 +41,7 @@ fun DeliverMeApp(authController: AuthController) {
     val navController = rememberNavController()
     val bottomNavigationItems = listOf(
         BottomNavigationScreens.Home,
-        BottomNavigationScreens.Notifications,
+        BottomNavigationScreens.Deliveries,
         BottomNavigationScreens.Settings,
     )
 
@@ -72,33 +75,36 @@ private fun AuthScreenNavigationConfigurations(
 
     NavHost(navController, startDestination = BottomNavigationScreens.Home.route) {
         composable(BottomNavigationScreens.Home.route) {
-            if (controller.uiState.activeDelivery == null) {
-                HomeScreen(
-                    modifier = modifier,
-                    deliveries = controller.uiState.deliveries,
-                    sort = controller.uiState.sort,
-                    refreshing = controller.uiState.refreshing,
-                    onDeliveryTap = { controller.onDeliveryTap(it) },
-                    onSortChange = { controller.onSortChange(it) },
-                    onRefreshDeliveries = { controller.loadDeliveries(refreshing = true) },
-                )
-            } else {
-                DeliveringScreen(
-                    modifier = modifier,
-                    delivery = controller.uiState.activeDelivery!!,
-                    onReceivedTap = { controller.onReceivedTap() },
-                    onDeliveredTap = { controller.onDeliveredTap() },
-                    onNavigateTap = { controller.navigateAddress() },
-                )
-            }
-
+            HomeScreen(
+                modifier = modifier,
+                deliveries = controller.uiState.activeDeliveries,
+                refreshing = controller.uiState.refreshing,
+                onDeliveryTap = { controller.onActiveDeliveryTap(it) },
+                onRefreshDeliveries = { controller.loadActiveDeliveries(true) },
+            )
             onNavigation(BottomNavigationScreens.Home.route)
         }
-        composable(BottomNavigationScreens.Notifications.route) {
-            NotificationsScreen(modifier = modifier,
-                showPackageDetails = { controller.navigateTo(OtherScreens.DeliveryDetails.route) }
+        composable(OtherScreens.ActiveDelivery.route) {
+            DeliveringScreen(
+                modifier = modifier,
+                delivery = controller.uiState.selectedActiveDelivery,
+                onGoBack = { controller.goBack() },
+                onReceivedTap = { controller.onReceivedTap() },
+                onDeliveredTap = { controller.onDeliveredTap() },
+                onNavigateTap = { controller.navigateAddress(it) },
             )
-            onNavigation(BottomNavigationScreens.Notifications.route)
+        }
+        composable(BottomNavigationScreens.Deliveries.route) {
+            DeliveriesScreen(
+                modifier = modifier,
+                deliveries = controller.uiState.deliveries,
+                sort = controller.uiState.sort,
+                refreshing = controller.uiState.refreshing,
+                onDeliveryTap = { controller.onDeliveryTap(it) },
+                onSortChange = { controller.onSortChange(it) },
+                onRefreshDeliveries = { controller.loadDeliveries(true) },
+            )
+            onNavigation(BottomNavigationScreens.Deliveries.route)
         }
         composable(BottomNavigationScreens.Settings.route) {
             SettingScreen(

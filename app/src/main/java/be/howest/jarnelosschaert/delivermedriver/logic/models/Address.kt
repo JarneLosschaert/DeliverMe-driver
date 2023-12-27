@@ -8,6 +8,6 @@ data class Address(
     @SerializedName("number") val number: String,
     @SerializedName("zip") val zip: String,
     @SerializedName("city") val city: String,
-    @SerializedName("lat") val country: Double,
-    @SerializedName("lon") val long: Double,
+    @SerializedName("lat") val lat: Double,
+    @SerializedName("lon") val lon: Double,
 )

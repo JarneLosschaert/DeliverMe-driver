@@ -4,6 +4,7 @@ import android.widget.Toast
 import androidx.navigation.NavController
 import be.howest.jarnelosschaert.delivermedriver.logic.AppUiState
 import be.howest.jarnelosschaert.delivermedriver.logic.helpers.DirectionsApi
+import be.howest.jarnelosschaert.delivermedriver.logic.models.Address
 import be.howest.jarnelosschaert.delivermedriver.logic.models.Delivery
 import be.howest.jarnelosschaert.delivermedriver.logic.models.DeliveryState
 import be.howest.jarnelosschaert.delivermedriver.logic.services.DeliveriesService
@@ -18,6 +19,7 @@ class AppController(
     private val deliveriesService = DeliveriesService()
 
     init {
+        loadActiveDeliveries()
         loadDeliveries()
     }
 
@@ -35,10 +37,29 @@ class AppController(
                         Toast.LENGTH_SHORT
                     ).show()
                 }
-                println(deliveries[0].id)
             },
-            handleFailure = { message ->
-                println(message)
+            handleFailure = {
+                uiState.refreshing = false
+            }
+        )
+    }
+
+    fun loadActiveDeliveries(refreshing: Boolean = false) {
+        if (refreshing) uiState.refreshing = true
+        deliveriesService.getActiveDeliveries(
+            authController.uiState.jwt,
+            handleSuccess = { deliveries ->
+                uiState.activeDeliveries = deliveries
+                uiState.refreshing = false
+                if (refreshing) {
+                    Toast.makeText(
+                        navController.context,
+                        "Active deliveries up to date",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            },
+            handleFailure = {
                 uiState.refreshing = false
             }
         )
@@ -51,7 +72,7 @@ class AppController(
             handleSuccess = {
                 Toast.makeText(navController.context, "Delivery assigned", Toast.LENGTH_SHORT)
                     .show()
-                uiState.activeDelivery = it
+                uiState.selectedActiveDelivery = it
                 navigateTo(BottomNavigationScreens.Home.route)
             },
             handleFailure = { message ->
@@ -59,39 +80,52 @@ class AppController(
             }
         )
     }
+
     fun onReceivedTap() {
-        updateDelivery(uiState.activeDelivery?.copy(state = DeliveryState.TRANSIT))
+        val newDelivery = uiState.selectedActiveDelivery.copy(state = DeliveryState.TRANSIT)
+        updateDelivery(newDelivery)
     }
+
     fun onDeliveredTap() {
-        updateDelivery(uiState.activeDelivery?.copy(state = DeliveryState.DELIVERED))
+        val newDelivery = uiState.selectedActiveDelivery.copy(state = DeliveryState.DELIVERED)
+        updateDelivery(newDelivery)
+        navigateTo(BottomNavigationScreens.Home.route)
     }
-    private fun updateDelivery(delivery: Delivery?) {
-        delivery?.let {
-            deliveriesService.updateDelivery(
-                authController.uiState.jwt,
-                delivery.id,
-                delivery.state,
-                handleSuccess = { newDelivery ->
-                    Toast.makeText(navController.context, "Delivery delivered", Toast.LENGTH_SHORT)
-                        .show()
-                    uiState.activeDelivery = newDelivery
-                },
-                handleFailure = { message ->
-                    Toast.makeText(navController.context, message, Toast.LENGTH_SHORT).show()
-                }
-            )
-        }
+
+    private fun updateDelivery(delivery: Delivery) {
+        deliveriesService.updateDelivery(
+            authController.uiState.jwt,
+            delivery.id,
+            delivery.state,
+            handleSuccess = { newDelivery ->
+                Toast.makeText(navController.context, "Delivery updated", Toast.LENGTH_SHORT)
+                    .show()
+                uiState.selectedActiveDelivery = newDelivery
+            },
+            handleFailure = { message ->
+                Toast.makeText(navController.context, message, Toast.LENGTH_SHORT).show()
+            }
+        )
     }
+
     fun onDeliveryTap(delivery: Delivery) {
         uiState.selectedDelivery = delivery
         navController.navigate(OtherScreens.DeliveryDetails.route)
     }
+
+    fun onActiveDeliveryTap(delivery: Delivery) {
+        uiState.selectedActiveDelivery = delivery
+        navController.navigate(OtherScreens.ActiveDelivery.route)
+    }
+
     fun onSortChange(sort: String) {
         uiState.sort = sort
     }
-    fun navigateAddress() {
-        DirectionsApi.openGoogleMapsNavigationToB(navController.context, 51.19, 3.18)
+
+    fun navigateAddress(address: Address) {
+        DirectionsApi.openGoogleMapsNavigationToB(navController.context, address.lat, address.lon)
     }
+
     fun goBack() {
         if (navController.currentDestination?.route == BottomNavigationScreens.Home.route) {
             //uiState.showExitDialog = true
@@ -99,7 +133,13 @@ class AppController(
             navController.popBackStack()
         }
     }
+
     fun navigateTo(route: String) {
+        if (route == BottomNavigationScreens.Home.route) {
+            loadActiveDeliveries()
+        } else if (route == BottomNavigationScreens.Deliveries.route) {
+            loadDeliveries()
+        }
         navController.navigate(route)
     }
 }

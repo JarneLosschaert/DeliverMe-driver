@@ -13,6 +13,7 @@ class AppUiState : ViewModel() {
     var refreshing by mutableStateOf(false)
 
     var selectedDelivery: Delivery by mutableStateOf(defaultDelivery)
+    var selectedActiveDelivery: Delivery by mutableStateOf(defaultDelivery)
 
-    var activeDelivery: Delivery? by mutableStateOf(null)
+    var activeDeliveries by mutableStateOf(listOf<Delivery>())
 }

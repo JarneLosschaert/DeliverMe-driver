@@ -17,7 +17,7 @@ fun DeliveryDetailsScreen(
 ) {
     Box(modifier = modifier.fillMaxWidth()) {
         Column {
-            Title(text = "Package details", onGoBack = onGoBack, withGoBack = true)
+            Title(text = "Delivery details", onGoBack = onGoBack, withGoBack = true)
 
             DeliveryDetail(label = "Sender", content = delivery.packageInfo.sender.person.name)
             DeliveryDetail(label = "Address (sender)", content = showAddress(delivery.packageInfo.senderAddress))
