@@ -40,15 +40,18 @@ fun DeliveringScreen(
             DeliveryDetail(label = "Size", content = delivery.packageInfo.packageSize.value)
             DeliveryDetail(label = "Distance", content = "${delivery.packageInfo.distance} km")
             DeliveryDetail(label = "Payment", content = "€ ${delivery.packageInfo.driverFee}")
-            GeneralButton(
-                text = "Navigate",
-                onTap = {
-                    if (delivery.state == DeliveryState.ASSIGNED) {
-                        onNavigateTap(delivery.packageInfo.senderAddress)
-                    } else {
-                        onNavigateTap(delivery.packageInfo.receiverAddress)
-                    }
-                })
+            if (delivery.state == DeliveryState.ASSIGNED) {
+                GeneralButton(
+                    text = "Navigate to sender",
+                    onTap = { onNavigateTap(delivery.packageInfo.senderAddress) }
+                )
+            }
+            if (delivery.state == DeliveryState.TRANSIT) {
+                GeneralButton(
+                    text = "Navigate to receiver",
+                    onTap = { onNavigateTap(delivery.packageInfo.receiverAddress) }
+                )
+            }
             if (delivery.state == DeliveryState.ASSIGNED) {
                 FingerPrintButton(text = "Package received", onSuccess = onReceivedTap)
             }
