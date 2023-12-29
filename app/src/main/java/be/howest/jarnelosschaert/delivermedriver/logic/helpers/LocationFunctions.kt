@@ -27,8 +27,8 @@ fun sortDeliveriesByDistance(userLocation: Location, deliveries: List<Delivery>)
         calculateDistance(
             userLocation.latitude,
             userLocation.longitude,
-            delivery.packageInfo.senderAddress.lat,
-            delivery.packageInfo.senderAddress.lon
+            delivery.`package`.senderAddress.lat,
+            delivery.`package`.senderAddress.lon
         )
     }
 }

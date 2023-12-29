@@ -1,9 +1,10 @@
 package be.howest.jarnelosschaert.delivermedriver.logic.models
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Driver(
-    @SerializedName("id") val id: Int,
-    @SerializedName("walletAddress") val walletAddress: String,
-    @SerializedName("person") val person: Person,
+    val id: Int,
+    val walletAddress: String,
+    val person: Person,
 )

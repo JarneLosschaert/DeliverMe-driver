@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    // Json
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.7.0'
 }
 
 android {
@@ -79,4 +81,14 @@ dependencies {
 
     // Finger scan
     implementation("androidx.biometric:biometric:1.2.0-alpha05")
+
+    // Notifier
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1"
+    implementation "com.squareup.okhttp3:okhttp:4.9.1"
+    implementation "com.squareup.okhttp3:logging-interceptor:4.9.1"
+    implementation "com.google.accompanist:accompanist-systemuicontroller:0.18.0"
+
+    // Worker
+    implementation "androidx.work:work-runtime-ktx:2.7.0"
 }

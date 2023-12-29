@@ -2,10 +2,15 @@ package be.howest.jarnelosschaert.delivermedriver.logic.controllers
 
 import android.widget.Toast
 import androidx.navigation.NavController
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkManager
+import androidx.work.WorkRequest
 import be.howest.jarnelosschaert.delivermedriver.logic.AppUiState
 import be.howest.jarnelosschaert.delivermedriver.logic.data.Sort
 import be.howest.jarnelosschaert.delivermedriver.logic.data.defaultSort
 import be.howest.jarnelosschaert.delivermedriver.logic.helpers.DirectionsApi
+import be.howest.jarnelosschaert.delivermedriver.logic.helpers.LocationUpdateWorker
 import be.howest.jarnelosschaert.delivermedriver.logic.helpers.getLocation
 import be.howest.jarnelosschaert.delivermedriver.logic.helpers.sortDeliveriesByDistance
 import be.howest.jarnelosschaert.delivermedriver.logic.models.Address
@@ -14,6 +19,7 @@ import be.howest.jarnelosschaert.delivermedriver.logic.models.DeliveryState
 import be.howest.jarnelosschaert.delivermedriver.logic.services.DeliveriesService
 import be.howest.jarnelosschaert.delivermedriver.ui.BottomNavigationScreens
 import be.howest.jarnelosschaert.delivermedriver.ui.OtherScreens
+import com.google.gson.Gson
 
 class AppController(
     private val navController: NavController,
@@ -63,6 +69,7 @@ class AppController(
                         Toast.LENGTH_SHORT
                     ).show()
                 }
+                startUpdateWorker()
             },
             handleFailure = {
                 uiState.refreshing = false
@@ -78,6 +85,7 @@ class AppController(
                 Toast.makeText(navController.context, "Delivery assigned", Toast.LENGTH_SHORT)
                     .show()
                 uiState.selectedActiveDelivery = it
+                startUpdateWorker()
                 navigateTo(BottomNavigationScreens.Home.route)
             },
             handleFailure = { message ->
@@ -86,14 +94,35 @@ class AppController(
         )
     }
 
+    private fun startUpdateWorker() {
+        val workManager = WorkManager.getInstance(navController.context)
+        workManager.cancelAllWork()
+
+        for (delivery in uiState.activeDeliveries) {
+            val deliveryJson = Gson().toJson(delivery)
+            val inputData = Data.Builder()
+                .putString("email", authController.uiState.driver.person.email)
+                .putString("delivery", deliveryJson)
+                .build()
+
+            val workRequest: WorkRequest =
+                OneTimeWorkRequest.Builder(LocationUpdateWorker::class.java)
+                    .setInputData(inputData)
+                    .build()
+
+            WorkManager.getInstance(navController.context).enqueue(workRequest)
+        }
+    }
+
     fun onReceivedTap() {
-        val newDelivery = uiState.selectedActiveDelivery.copy(state = DeliveryState.TRANSIT)
+        val newDelivery = uiState.selectedActiveDelivery.copy(state = DeliveryState.transit)
         updateDelivery(newDelivery)
     }
 
     fun onDeliveredTap() {
-        val newDelivery = uiState.selectedActiveDelivery.copy(state = DeliveryState.DELIVERED)
+        val newDelivery = uiState.selectedActiveDelivery.copy(state = DeliveryState.delivered)
         updateDelivery(newDelivery)
+        startUpdateWorker()
     }
 
     private fun updateDelivery(delivery: Delivery) {
@@ -105,7 +134,7 @@ class AppController(
                 Toast.makeText(navController.context, "Delivery updated", Toast.LENGTH_SHORT)
                     .show()
                 uiState.selectedActiveDelivery = newDelivery
-                if (newDelivery.state == DeliveryState.DELIVERED) {
+                if (newDelivery.state == DeliveryState.delivered) {
                     navigateTo(BottomNavigationScreens.Home.route)
                 }
 
@@ -129,10 +158,10 @@ class AppController(
     fun onSortChange(sort: Sort = defaultSort) {
         when (sort) {
             Sort.DISTANCE_DESC -> {
-                uiState.deliveries = uiState.deliveries.sortedByDescending { it.packageInfo.distance }
+                uiState.deliveries = uiState.deliveries.sortedByDescending { it.`package`.distance }
             }
             Sort.DISTANCE_ASC -> {
-                uiState.deliveries = uiState.deliveries.sortedBy { it.packageInfo.distance }
+                uiState.deliveries = uiState.deliveries.sortedBy { it.`package`.distance }
             }
             Sort.CLOSEST -> {
                 getLocation(
@@ -140,7 +169,8 @@ class AppController(
                     onLocationResult = { location ->
                         println(location)
                         if (location != null) {
-                            uiState.deliveries = sortDeliveriesByDistance(location, uiState.deliveries)
+                            uiState.deliveries =
+                                sortDeliveriesByDistance(location, uiState.deliveries)
                         }
                     }
                 )
@@ -148,6 +178,7 @@ class AppController(
         }
         uiState.sort = sort
     }
+
     fun navigateAddress(address: Address) {
         DirectionsApi.openGoogleMapsNavigationToB(navController.context, address.lat, address.lon)
     }

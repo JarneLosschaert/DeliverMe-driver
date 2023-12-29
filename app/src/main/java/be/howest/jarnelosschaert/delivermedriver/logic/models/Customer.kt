@@ -1,10 +1,11 @@
 package be.howest.jarnelosschaert.delivermedriver.logic.models
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Customer(
-    @SerializedName("id") val id: Int,
-    @SerializedName("homeAddress") val homeAddress: Address,
-    @SerializedName("person") val person: Person,
-    @SerializedName("contacts") val contacts: List<Customer>,
+    val id: Int,
+    val homeAddress: Address,
+    val person: Person,
+    val contacts: List<Customer> = listOf(),
 )

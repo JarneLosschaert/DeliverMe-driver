@@ -164,20 +164,20 @@ fun DeliveryCard(
             .padding(10.dp)
             .clickable(onClick = onDeliveryTap),
     ) {
-        DeliveryDetail(label = "From", content = showAddress(delivery.packageInfo.senderAddress))
-        DeliveryDetail(label = "To", content = showAddress(delivery.packageInfo.receiverAddress))
+        DeliveryDetail(label = "From", content = showAddress(delivery.`package`.senderAddress))
+        DeliveryDetail(label = "To", content = showAddress(delivery.`package`.receiverAddress))
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             DeliveryDetail(
                 label = "Distance",
-                content = "${delivery.packageInfo.distance} km",
+                content = "${delivery.`package`.distance} km",
                 withSpacer = false
             )
             DeliveryDetail(
                 label = "Payment",
-                content = "€ ${delivery.packageInfo.driverFee}",
+                content = "€ ${delivery.`package`.driverFee}",
                 withSpacer = false
             )
         }

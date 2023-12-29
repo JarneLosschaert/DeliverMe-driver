@@ -27,35 +27,35 @@ fun DeliveringScreen(
         Column {
             Title(text = "Active delivery", onGoBack = onGoBack, withGoBack = true)
             SubTitle(text = "Active delivery")
-            DeliveryDetail(label = "Sender", content = delivery.packageInfo.sender.person.name)
+            DeliveryDetail(label = "Sender", content = delivery.`package`.sender.person.name)
             DeliveryDetail(
                 label = "Address (sender)",
-                content = showAddress(delivery.packageInfo.senderAddress)
+                content = showAddress(delivery.`package`.senderAddress)
             )
-            DeliveryDetail(label = "Receiver", content = delivery.packageInfo.receiver.person.name)
+            DeliveryDetail(label = "Receiver", content = delivery.`package`.receiver.person.name)
             DeliveryDetail(
                 label = "Address (receiver)",
-                content = showAddress(delivery.packageInfo.receiverAddress)
+                content = showAddress(delivery.`package`.receiverAddress)
             )
-            DeliveryDetail(label = "Size", content = delivery.packageInfo.packageSize.value)
-            DeliveryDetail(label = "Distance", content = "${delivery.packageInfo.distance} km")
-            DeliveryDetail(label = "Payment", content = "€ ${delivery.packageInfo.driverFee}")
-            if (delivery.state == DeliveryState.ASSIGNED) {
+            DeliveryDetail(label = "Size", content = delivery.`package`.packageSize.value)
+            DeliveryDetail(label = "Distance", content = "${delivery.`package`.distance} km")
+            DeliveryDetail(label = "Payment", content = "€ ${delivery.`package`.driverFee}")
+            if (delivery.state == DeliveryState.assigned) {
                 GeneralButton(
                     text = "Navigate to sender",
-                    onTap = { onNavigateTap(delivery.packageInfo.senderAddress) }
+                    onTap = { onNavigateTap(delivery.`package`.senderAddress) }
                 )
             }
-            if (delivery.state == DeliveryState.TRANSIT) {
+            if (delivery.state == DeliveryState.transit) {
                 GeneralButton(
                     text = "Navigate to receiver",
-                    onTap = { onNavigateTap(delivery.packageInfo.receiverAddress) }
+                    onTap = { onNavigateTap(delivery.`package`.receiverAddress) }
                 )
             }
-            if (delivery.state == DeliveryState.ASSIGNED) {
+            if (delivery.state == DeliveryState.assigned) {
                 FingerPrintButton(text = "Package received", onSuccess = onReceivedTap)
             }
-            if (delivery.state == DeliveryState.TRANSIT) {
+            if (delivery.state == DeliveryState.transit) {
                 FingerPrintButton(text = "Package delivered", onSuccess = onDeliveredTap)
             }
         }

@@ -18,11 +18,18 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkManager
+import androidx.work.WorkRequest
 import be.howest.jarnelosschaert.delivermedriver.logic.controllers.AppController
 import be.howest.jarnelosschaert.delivermedriver.logic.controllers.AuthController
+import be.howest.jarnelosschaert.delivermedriver.logic.helpers.LocationUpdateWorker
 import be.howest.jarnelosschaert.delivermedriver.ui.helpers.components.roundedBottomNav
 import be.howest.jarnelosschaert.delivermedriver.ui.screens.*
 import be.howest.jarnelosschaert.delivermedriver.ui.screens.settingScreens.ProfileScreen
+import com.google.gson.Gson
+import java.util.concurrent.TimeUnit
 
 sealed class BottomNavigationScreens(val route: String, val icon: ImageVector) {
     object Home : BottomNavigationScreens("home", Icons.Filled.Home)

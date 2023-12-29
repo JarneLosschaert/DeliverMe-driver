@@ -1,14 +1,13 @@
 package be.howest.jarnelosschaert.delivermedriver.logic.models
 
-import be.howest.jarnelosschaert.delivermedriver.logic.models.DeliveryState
-import be.howest.jarnelosschaert.delivermedriver.logic.models.Package
-import com.google.gson.annotations.SerializedName
-import java.time.LocalDateTime
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Delivery(
-    @SerializedName("id") val id: Int,
-    @SerializedName("dateTimeDeparted") val dateTimeDeparted: LocalDateTime?,
-    @SerializedName("dateTimeArrived") val dateTimeArrived: LocalDateTime?,
-    @SerializedName("state") val state: DeliveryState,
-    @SerializedName("package") val packageInfo: Package
+    val id: Int,
+    val dateTimeDeparted: String,
+    val dateTimeArrived: String,
+    val state: DeliveryState,
+    val `package`: Package,
+    val driver: Driver
 )
