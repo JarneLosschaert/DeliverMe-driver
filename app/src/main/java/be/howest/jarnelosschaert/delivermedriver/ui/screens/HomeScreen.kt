@@ -5,12 +5,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import be.howest.jarnelosschaert.delivermedriver.logic.models.Delivery
 import be.howest.jarnelosschaert.delivermedriver.ui.helpers.components.Content
 import be.howest.jarnelosschaert.delivermedriver.ui.helpers.components.SubTitle
 import be.howest.jarnelosschaert.delivermedriver.ui.helpers.components.Title
+import be.howest.jarnelosschaert.delivermedriver.ui.helpers.functions.HandleLocationPermissions
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
@@ -22,6 +23,8 @@ fun HomeScreen(
     onDeliveryTap: (Delivery) -> Unit,
     onRefreshDeliveries: () -> Unit,
 ) {
+    var granted by remember { mutableStateOf(false) }
+    HandleLocationPermissions(onPermission = { granted = it })
     Box(modifier = modifier.fillMaxWidth()) {
         Column {
             Title()
