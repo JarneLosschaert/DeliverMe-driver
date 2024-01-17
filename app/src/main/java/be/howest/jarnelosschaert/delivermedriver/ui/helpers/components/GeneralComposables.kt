@@ -93,24 +93,6 @@ fun Content(
 }
 
 @Composable
-fun DateDetails(text: String) {
-    Text(
-        text = text,
-        color = MaterialTheme.colors.onBackground,
-        fontSize = 15.sp,
-        textAlign = TextAlign.End,
-        modifier = Modifier.fillMaxWidth(),
-        fontStyle = FontStyle.Italic
-    )
-}
-@Composable
-fun ContentLabel(label: String, content: String) {
-    Label(text = label)
-    Content(text = content)
-    Spacer(modifier = Modifier.height(10.dp))
-}
-
-@Composable
 fun GeneralButton(
     modifier: Modifier = Modifier,
     text: String = "See details",

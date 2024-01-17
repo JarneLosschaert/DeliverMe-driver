@@ -193,7 +193,7 @@ fun Profile(
         ))
     EditableContentLabel(label = "Card number",
         text = showWalletAddress(driver.walletAddress),
-        onEdit = onChoiceEdit,
+        onEdit = onTextEdit,
         popupContent = PopupContent(
             title = "Change card number",
             content = "Are you sure you want to change your card number?",
